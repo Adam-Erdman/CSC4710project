@@ -166,4 +166,24 @@ public class PeopleDAO extends HttpServlet {
          
         return people;
     }
+
+	public void wipe() throws SQLException{
+		connect_func();
+		
+		String deleteTable = "DROP TABLE IF EXISTS users";
+		String createTable = "CREATE TABLE IF NOT EXISTS users " +
+			"(id INTEGER not NULL AUTO_INCREMENT, " +
+			" username VARCHAR(50) NOT NULL, " + 
+			" userpassword VARCHAR(50) NOT NULL, " + 
+			" firstname VARCHAR(50) NOT NULL, " + 
+			" lastname VARCHAR(50) NOT NULL, " + 
+			" emailaddress varchar(50) not NULL," +
+			" PRIMARY KEY ( id ))"; 
+	
+		statement = connect.createStatement();
+	    statement.executeUpdate(deleteTable);
+	    statement.executeUpdate(createTable);
+	    
+	    statement.close();
+	}
 }

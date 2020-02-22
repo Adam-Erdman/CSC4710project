@@ -56,6 +56,12 @@ public class ControlServlet extends HttpServlet {
             case "/update":
             	updatePeople(request, response);
                 break;
+            case "/initDB":
+            	initDBForm(request,response); 
+            	break;
+            case "/resetDB":
+        		initDB(request,response); 
+            	break;
             default:          	
             	listPeople(request, response);           	
                 break;
@@ -65,7 +71,44 @@ public class ControlServlet extends HttpServlet {
         }
     }
     
-    private void listPeople(HttpServletRequest request, HttpServletResponse response)
+    private void initDBForm(HttpServletRequest request, HttpServletResponse response)
+        throws ServletException, IOException {
+            RequestDispatcher dispatcher = request.getRequestDispatcher("InitDB.jsp");
+            dispatcher.forward(request, response);
+	}
+
+	private void initDB(HttpServletRequest request, HttpServletResponse response) 
+    		throws SQLException, IOException, ServletException{
+    	System.out.println("Initializing Database");
+    	peopleDAO.wipe();
+    	String username, userpassword, firstname, lastname, emailaddress;
+    	People people; 
+    	
+    	//Create root user
+    	username = "root" ;
+		userpassword = "pass1234";
+		firstname = "root";
+		lastname = "user";
+		emailaddress = "root@gmail.com";
+		
+        people = new People(username, userpassword, firstname, lastname, emailaddress);
+        peopleDAO.insert(people);
+
+    	//Insert 14 other users
+    	for(int i =1; i < 15; i++) {
+    		username = "user" +i;
+    		userpassword = "password" + i;
+    		firstname = "name" + i;
+    		lastname = "last" + i;
+    		emailaddress = username + "@gmail.com";
+    		
+	        people = new People(username, userpassword, firstname, lastname, emailaddress);
+	        peopleDAO.insert(people);
+    	}
+        response.sendRedirect("list");		
+	}
+
+	private void listPeople(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         List<People> listPeople = peopleDAO.listAllPeople();
         request.setAttribute("listPeople", listPeople);       
