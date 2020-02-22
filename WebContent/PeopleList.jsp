@@ -25,6 +25,7 @@
                 <th>First Name</th>
                 <th>Last Name</th>
                 <th>Email</th>
+                <th>Edit / Delete</th>
             </tr>
             <c:forEach items="${listPeople}" var="people">
                 <tr>
