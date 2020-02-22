@@ -30,7 +30,6 @@ public class PeopleDAO extends HttpServlet {
 	private PreparedStatement preparedStatement = null;
 	private ResultSet resultSet = null;
 	
-	
 	public PeopleDAO() {
 
     }
@@ -62,16 +61,17 @@ public class PeopleDAO extends HttpServlet {
          
         while (resultSet.next()) {
             int id = resultSet.getInt("id");
+            String username = resultSet.getString("username");
+            String userpassword = resultSet.getString("userpassword");
             String firstname = resultSet.getString("firstname");
             String lastname = resultSet.getString("lastname");
-            String emailaddress = resultSet.getString("emailaddresss");
-            String userpassword = resultSet.getString("userpassword");
-            String username = resultSet.getString("username");
-             
+            String emailaddress = resultSet.getString("emailaddress");
+                         
             People people = new People( id, username, userpassword, firstname, lastname, emailaddress);
 
             listPeople.add(people);
         }        
+        
         resultSet.close();
         statement.close();         
         disconnect();        
@@ -115,7 +115,7 @@ public class PeopleDAO extends HttpServlet {
     }
      
     public boolean update(People people) throws SQLException {
-        String sql = "update users set firsname=?, lastname =?, emailaddress = ?, username = ?, where id = ?";
+        String sql = "update users set username=?, userpassword =?, firstname = ?, lastname = ?,emailaddress = ?, where id = ?";
         connect_func();
         
         preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
