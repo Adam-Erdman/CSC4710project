@@ -91,10 +91,13 @@ public class ControlServlet extends HttpServlet {
  
     private void insertPeople(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
-        String name = request.getParameter("name");
-        String address = request.getParameter("address");
-        String status = request.getParameter("status");
-        People newPeople = new People(name, address, status);
+        String username = request.getParameter("username");
+        String userpassword = request.getParameter("uerpassword");
+        String firstname = request.getParameter("firstname");
+        String lastname = request.getParameter("lastname");
+        String emailaddress = request.getParameter("emailaddress");
+        
+        People newPeople = new People(username, userpassword, firstname, lastname, emailaddress);
         peopleDAO.insert(newPeople);
         response.sendRedirect("list");
     }
@@ -104,13 +107,15 @@ public class ControlServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         
         System.out.println(id);
-        String name = request.getParameter("name");
-        String address = request.getParameter("address");
-        String status = request.getParameter("status");
+        String username = request.getParameter("username");
+        String userpassword = request.getParameter("uerpassword");
+        String firstname = request.getParameter("firstname");
+        String lastname = request.getParameter("lastname");
+        String emailaddress = request.getParameter("emailaddress");
         
-        System.out.println(name);
+        System.out.println(username);
         
-        People people = new People(id,name, address, status);
+        People people = new People(username, userpassword, firstname, lastname, emailaddress);
         peopleDAO.update(people);
         response.sendRedirect("list");
     }

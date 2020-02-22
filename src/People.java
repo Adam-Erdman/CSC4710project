@@ -1,7 +1,7 @@
 
 
 public class People {
-   // protected int id;
+	protected int id;
     protected String username;
     protected String userpassword;
     protected String firstname;
@@ -9,6 +9,20 @@ public class People {
     protected String emailaddress;
  
     public People() {
+    	
+    }
+    
+    public People(int id) {
+        this.id = id;
+    }
+ 
+    public People(int id, String username, String userpassword, String firstname, String lastname, String emailaddress) {
+        this.username = username;
+        this.userpassword = userpassword;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.emailaddress = emailaddress;
+        this.id = id;
     }
     
     public People(String username, String userpassword, String firstname, String lastname, String emailaddress) {
@@ -20,28 +34,6 @@ public class People {
       
   }
  
-//    public People(int id) {
-//        this.id = id;
-//    }
-// 
-//    public People(int id, String name, String address, String status) {
-//        this(name, address, status);
-//        this.id = id;
-//    }
-//     
-//    public People(String name, String address, String status) {
-//        this.name = name;
-//        this.address = address;
-//        this.status = status;
-//    }
- 
-//    public int getId() {
-//        return id;
-//    }
-// 
-//    public void setId(int id) {
-//        this.id = id;
-//    }
  
     public String getUserName() {
         return username;
