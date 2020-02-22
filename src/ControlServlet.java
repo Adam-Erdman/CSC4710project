@@ -170,5 +170,4 @@ public class ControlServlet extends HttpServlet {
         peopleDAO.delete(id);
         response.sendRedirect("list"); 
     }
-
 }

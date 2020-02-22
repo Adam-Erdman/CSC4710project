@@ -11,8 +11,10 @@
         <h1>People Management</h1>
         <h2>
             <a href="new">Add New People</a>
-            &nbsp;&nbsp;&nbsp;
+           		&nbsp;&nbsp;&nbsp;
             <a href="list">List All People</a>
+            	&nbsp;&nbsp;&nbsp;
+            <a href="initDB">Initialize DB</a>
              
         </h2>
     </center>
