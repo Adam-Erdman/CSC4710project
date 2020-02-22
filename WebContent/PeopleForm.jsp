@@ -9,6 +9,8 @@
     <center>
         <h1>People Management</h1>
         <h2>
+        	<a href="loginForm">Log-in</a>
+            &nbsp;&nbsp;&nbsp;
             <a href="new">Add New People</a>
             &nbsp;&nbsp;&nbsp;
             <a href="list">List All People</a>
