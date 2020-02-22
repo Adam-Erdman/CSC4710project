@@ -55,16 +55,24 @@
             <tr>
                 <th>Email: </th>
                 <td>
-                    <input type="text" name="email" size="5"
+                    <input type="text" name="email" size="45"
                             value="<c:out value='${people.emailaddress}' />"
                     />
                 </td>
             </tr>
-                <tr>
+            <tr>
                 <th>Username: </th>
                 <td>
-                    <input type="text" name="username" size="5"
+                    <input type="text" name="username" size="45"
                             value="<c:out value='${people.username}' />"
+                    />
+                </td>
+            </tr>
+            <tr>
+                <th>Password: </th>
+                <td>
+                    <input type="text" name="userpassword" size="45"
+                            value="<c:out value='${people.password}' />"
                     />
                 </td>
             </tr>
