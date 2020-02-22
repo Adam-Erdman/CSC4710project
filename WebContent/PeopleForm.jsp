@@ -72,7 +72,7 @@
                 <th>Password: </th>
                 <td>
                     <input type="text" name="userpassword" size="45"
-                            value="<c:out value='${people.password}' />"
+                            value="<c:out value='${people.userpassword}' />"
                     />
                 </td>
             </tr>
