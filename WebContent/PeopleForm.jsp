@@ -12,7 +12,6 @@
             <a href="new">Add New People</a>
             &nbsp;&nbsp;&nbsp;
             <a href="list">List All People</a>
-             
         </h2>
     </center>
     <div align="center">
@@ -39,7 +38,7 @@
             <tr>
                 <th>First Name: </th>
                 <td>
-                    <input type="text" name="First Name" size="45"
+                    <input type="text" name="firstname" size="45"
                             value="<c:out value='${people.firstname}' />"
                         />
                 </td>
@@ -47,7 +46,7 @@
             <tr>
                 <th>Last Name: </th>
                 <td>
-                    <input type="text" name="Last Name" size="45"
+                    <input type="text" name="lastname" size="45"
                             value="<c:out value='${people.lastname}' />"
                     />
                 </td>
@@ -55,7 +54,7 @@
             <tr>
                 <th>Email: </th>
                 <td>
-                    <input type="text" name="email" size="45"
+                    <input type="text" name="emailaddress" size="45"
                             value="<c:out value='${people.emailaddress}' />"
                     />
                 </td>
@@ -71,7 +70,7 @@
             <tr>
                 <th>Password: </th>
                 <td>
-                    <input type="text" name="userpassword" size="45"
+                    <input type="password" name="userpassword" size="45"
                             value="<c:out value='${people.userpassword}' />"
                     />
                 </td>

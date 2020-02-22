@@ -93,7 +93,7 @@ public class PeopleDAO extends HttpServlet {
 		preparedStatement.setString(3, people.firstname);
 		preparedStatement.setString(4, people.lastname);
 		preparedStatement.setString(5, people.emailaddress);
-		preparedStatement.executeUpdate();
+//		preparedStatement.executeUpdate();
 		
         boolean rowInserted = preparedStatement.executeUpdate() > 0;
         preparedStatement.close();

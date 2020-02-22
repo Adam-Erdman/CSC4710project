@@ -34,8 +34,7 @@
                     <td><c:out value="${people.userpassword}" /></td>
                     <td><c:out value="${people.firstname}" /></td>
                     <td><c:out value="${people.lastname}" /></td>
-                    <td><c:out value="${people.email}" /></td>
-                    <td>
+                    <td><c:out value="${people.emailaddress}" /></td>
                         <a href="edit?id=<c:out value='${people.id}' />">Edit</a>
                         &nbsp;&nbsp;&nbsp;&nbsp;
                         <a href="delete?id=<c:out value='${people.id}' />">Delete</a>                     

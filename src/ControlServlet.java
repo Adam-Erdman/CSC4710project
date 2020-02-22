@@ -92,7 +92,7 @@ public class ControlServlet extends HttpServlet {
     private void insertPeople(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
         String username = request.getParameter("username");
-        String userpassword = request.getParameter("uerpassword");
+        String userpassword = request.getParameter("userpassword");
         String firstname = request.getParameter("firstname");
         String lastname = request.getParameter("lastname");
         String emailaddress = request.getParameter("emailaddress");
@@ -108,7 +108,7 @@ public class ControlServlet extends HttpServlet {
         
         System.out.println(id);
         String username = request.getParameter("username");
-        String userpassword = request.getParameter("uerpassword");
+        String userpassword = request.getParameter("userpassword");
         String firstname = request.getParameter("firstname");
         String lastname = request.getParameter("lastname");
         String emailaddress = request.getParameter("emailaddress");
