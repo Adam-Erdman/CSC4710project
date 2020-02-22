@@ -186,4 +186,29 @@ public class PeopleDAO extends HttpServlet {
 	    
 	    statement.close();
 	}
+	
+	public Boolean findUser(String username, String userpassword) throws SQLException{
+		
+		connect_func();
+        String sql = "SELECT * FROM users WHERE username = ? AND userpassword = ?";
+         
+        
+         
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, userpassword);
+         
+        ResultSet resultSet = preparedStatement.executeQuery();
+        
+        if (resultSet.next()) {
+
+              
+             return true;
+        }
+        
+        else
+        	return false;
+    
+		
+	}
 }

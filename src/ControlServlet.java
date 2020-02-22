@@ -62,6 +62,15 @@ public class ControlServlet extends HttpServlet {
             case "/resetDB":
         		initDB(request,response); 
             	break;
+            case "/login":
+        		login(request,response); 
+            	break;
+            case "/loginForm":
+            	loginForm(request,response); 
+            	break;
+            case "/welcome":
+            	welcomeForm(request, response);
+            	break;
             default:          	
             	listPeople(request, response);           	
                 break;
@@ -107,6 +116,35 @@ public class ControlServlet extends HttpServlet {
     	}
         response.sendRedirect("list");		
 	}
+	
+	 private void loginForm(HttpServletRequest request, HttpServletResponse response)
+		        throws ServletException, IOException {
+		            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+		            dispatcher.forward(request, response);
+			}
+	 
+	private void login(HttpServletRequest request, HttpServletResponse response) 
+    		throws SQLException, IOException, ServletException{
+		
+		 String username = request.getParameter("username");
+	     String userpassword = request.getParameter("userpassword");
+	     
+	     if(peopleDAO.findUser(username, userpassword)) {
+	    	 response.sendRedirect("welcome");
+	    	 System.out.println("login successful");
+	     }
+	     else {
+	    	 response.sendRedirect("loginForm");
+	     }
+	     
+	     
+	}
+	
+	private void welcomeForm(HttpServletRequest request, HttpServletResponse response)
+	        throws ServletException, IOException {
+	            RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
+	            dispatcher.forward(request, response);
+		}
 
 	private void listPeople(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
