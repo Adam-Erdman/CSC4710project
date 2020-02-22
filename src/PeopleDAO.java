@@ -46,26 +46,30 @@ public class PeopleDAO extends HttpServlet {
                 throw new SQLException(e);
             }
             connect = (Connection) DriverManager
-  			      .getConnection("jdbc:mysql://127.0.0.1:3306/test?"
+  			      .getConnection("jdbc:mysql://127.0.0.1:3306/project?"
   			          + "user=john&password=pass1234");
             System.out.println(connect);
         }
     }
     
+    
     public List<People> listAllPeople() throws SQLException {
         List<People> listPeople = new ArrayList<People>();        
-        String sql = "SELECT * FROM student";      
+        String sql = "SELECT * FROM users";      
         connect_func();      
         statement =  (Statement) connect.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
          
         while (resultSet.next()) {
             int id = resultSet.getInt("id");
-            String name = resultSet.getString("name");
-            String address = resultSet.getString("address");
-            String status = resultSet.getString("status");
+            String firstname = resultSet.getString("firstname");
+            String lastname = resultSet.getString("lastname");
+            String emailaddress = resultSet.getString("emailaddresss");
+            String userpassword = resultSet.getString("userpassword");
+            String username = resultSet.getString("username");
              
-            People people = new People(id,name, address, status);
+            People people = new People( id, username, userpassword, firstname, lastname, emailaddress);
+
             listPeople.add(people);
         }        
         resultSet.close();
@@ -82,12 +86,14 @@ public class PeopleDAO extends HttpServlet {
          
     public boolean insert(People people) throws SQLException {
     	connect_func();         
-		String sql = "insert into  student(Name, Address, Status) values (?, ?, ?)";
+		String sql = "insert into  users(username, userpassword, firstname, lastname, emailaddress) values (?, ?, ?, ?, ?)";
 		preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-		preparedStatement.setString(1, people.name);
-		preparedStatement.setString(2, people.address);
-		preparedStatement.setString(3, people.status);
-//		preparedStatement.executeUpdate();
+		preparedStatement.setString(1, people.username);
+		preparedStatement.setString(2, people.userpassword);
+		preparedStatement.setString(3, people.firstname);
+		preparedStatement.setString(4, people.lastname);
+		preparedStatement.setString(5, people.emailaddress);
+		preparedStatement.executeUpdate();
 		
         boolean rowInserted = preparedStatement.executeUpdate() > 0;
         preparedStatement.close();
@@ -96,7 +102,7 @@ public class PeopleDAO extends HttpServlet {
     }     
      
     public boolean delete(int peopleid) throws SQLException {
-        String sql = "DELETE FROM student WHERE id = ?";        
+        String sql = "DELETE FROM users WHERE id = ?";        
         connect_func();
          
         preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
@@ -109,14 +115,15 @@ public class PeopleDAO extends HttpServlet {
     }
      
     public boolean update(People people) throws SQLException {
-        String sql = "update student set Name=?, Address =?,Status = ? where id = ?";
+        String sql = "update users set firsname=?, lastname =?, emailaddress = ?, username = ?, where id = ?";
         connect_func();
         
         preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-        preparedStatement.setString(1, people.name);
-        preparedStatement.setString(2, people.address);
-        preparedStatement.setString(3, people.status);
-        preparedStatement.setInt(4, people.id);
+        preparedStatement.setString(1, people.firstname);
+        preparedStatement.setString(2, people.lastname);
+        preparedStatement.setString(3, people.emailaddress);
+        preparedStatement.setString(4, people.username);
+        preparedStatement.setInt(5, people.id);
          
         boolean rowUpdated = preparedStatement.executeUpdate() > 0;
         preparedStatement.close();
@@ -133,7 +140,7 @@ public class PeopleDAO extends HttpServlet {
 	
     public People getPeople(int id) throws SQLException {
     	People people = null;
-        String sql = "SELECT * FROM student WHERE id = ?";
+        String sql = "SELECT * FROM users WHERE id = ?";
          
         connect_func();
          
@@ -143,11 +150,13 @@ public class PeopleDAO extends HttpServlet {
         ResultSet resultSet = preparedStatement.executeQuery();
          
         if (resultSet.next()) {
-            String name = resultSet.getString("name");
-            String address = resultSet.getString("address");
-            String status = resultSet.getString("status");
+        	String firstname = resultSet.getString("firstname");
+            String lastname = resultSet.getString("lastname");
+            String emailaddress = resultSet.getString("emailaddresss");
+            String userpassword = resultSet.getString("userpassword");
+            String username = resultSet.getString("username");
              
-            people = new People(id, name, address, status);
+            people = new People( id, username, userpassword, firstname, lastname, emailaddress);
         }
          
         resultSet.close();
