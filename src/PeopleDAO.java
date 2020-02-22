@@ -45,7 +45,7 @@ public class PeopleDAO extends HttpServlet {
                 throw new SQLException(e);
             }
             connect = (Connection) DriverManager
-  			      .getConnection("jdbc:mysql://127.0.0.1:3306/project?"
+  			      .getConnection("jdbc:mysql://localhost:3306/project?"
   			          + "user=john&password=pass1234");
             System.out.println(connect);
         }
@@ -54,6 +54,7 @@ public class PeopleDAO extends HttpServlet {
     
     public List<People> listAllPeople() throws SQLException {
         List<People> listPeople = new ArrayList<People>();        
+        System.out.println("IM Making an array");
         String sql = "SELECT * FROM users";      
         connect_func();      
         statement =  (Statement) connect.createStatement();
@@ -115,15 +116,16 @@ public class PeopleDAO extends HttpServlet {
     }
      
     public boolean update(People people) throws SQLException {
-        String sql = "update users set username=?, userpassword =?, firstname = ?, lastname = ?,emailaddress = ?, where id = ?";
+        String sql = "update users set username=?, userpassword =?, firstname = ?, lastname = ?,emailaddress = ? where id = ?";
         connect_func();
         
         preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-        preparedStatement.setString(1, people.firstname);
-        preparedStatement.setString(2, people.lastname);
-        preparedStatement.setString(3, people.emailaddress);
-        preparedStatement.setString(4, people.username);
-        preparedStatement.setInt(5, people.id);
+        preparedStatement.setString(1, people.username);
+        preparedStatement.setString(2, people.userpassword);
+        preparedStatement.setString(3, people.firstname);
+        preparedStatement.setString(4, people.lastname);
+        preparedStatement.setString(5, people.emailaddress);
+        preparedStatement.setInt(6, people.id);
          
         boolean rowUpdated = preparedStatement.executeUpdate() > 0;
         preparedStatement.close();
@@ -152,11 +154,12 @@ public class PeopleDAO extends HttpServlet {
         if (resultSet.next()) {
         	String firstname = resultSet.getString("firstname");
             String lastname = resultSet.getString("lastname");
-            String emailaddress = resultSet.getString("emailaddresss");
+            String emailaddress = resultSet.getString("emailaddress");
             String userpassword = resultSet.getString("userpassword");
             String username = resultSet.getString("username");
              
             people = new People( id, username, userpassword, firstname, lastname, emailaddress);
+            System.out.println(people);
         }
          
         resultSet.close();

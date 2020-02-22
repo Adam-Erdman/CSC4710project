@@ -105,17 +105,17 @@ public class ControlServlet extends HttpServlet {
     private void updatePeople(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
-        
         System.out.println(id);
+        
         String username = request.getParameter("username");
         String userpassword = request.getParameter("userpassword");
         String firstname = request.getParameter("firstname");
         String lastname = request.getParameter("lastname");
         String emailaddress = request.getParameter("emailaddress");
-        
+      
         System.out.println(username);
         
-        People people = new People(username, userpassword, firstname, lastname, emailaddress);
+        People people = new People(id, username, userpassword, firstname, lastname, emailaddress);
         peopleDAO.update(people);
         response.sendRedirect("list");
     }

@@ -33,13 +33,13 @@
                 </h2>
             </caption>
                 <c:if test="${people != null}">
-                    <input type="hidden" name="id" value="<c:out value='${people.id}' />" />
+                    <input type="hidden" name="id" value="<c:out value='${people.getId()}' />" />
                 </c:if>           
             <tr>
                 <th>First Name: </th>
                 <td>
                     <input type="text" name="firstname" size="45"
-                            value="<c:out value='${people.firstname}' />"
+                            value="<c:out value='${people.getFirstName()}' />"
                         />
                 </td>
             </tr>
@@ -47,7 +47,7 @@
                 <th>Last Name: </th>
                 <td>
                     <input type="text" name="lastname" size="45"
-                            value="<c:out value='${people.lastname}' />"
+                            value="<c:out value='${people.getLastName()}' />"
                     />
                 </td>
             </tr>
@@ -55,7 +55,7 @@
                 <th>Email: </th>
                 <td>
                     <input type="text" name="emailaddress" size="45"
-                            value="<c:out value='${people.emailaddress}' />"
+                            value="<c:out value='${people.getEmailAddress()}' />"
                     />
                 </td>
             </tr>
@@ -63,7 +63,7 @@
                 <th>Username: </th>
                 <td>
                     <input type="text" name="username" size="45"
-                            value="<c:out value='${people.username}' />"
+                            value="<c:out value='${people.getUserName()}' />"
                     />
                 </td>
             </tr>
@@ -71,7 +71,7 @@
                 <th>Password: </th>
                 <td>
                     <input type="password" name="userpassword" size="45"
-                            value="<c:out value='${people.userpassword}' />"
+                            value="<c:out value='${people.getUserPassword()}' />"
                     />
                 </td>
             </tr>

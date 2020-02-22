@@ -3,7 +3,7 @@
 public class People {
 	protected int id;
     protected String username;
-    protected String userpassword;
+	protected String userpassword;
     protected String firstname;
     protected String lastname;
     protected String emailaddress;
@@ -31,11 +31,19 @@ public class People {
       this.firstname = firstname;
       this.lastname = lastname;
       this.emailaddress = emailaddress;
-      
   }
  
- 
-    public String getUserName() {
+    @Override
+	public String toString() {
+		return "People [id=" + id + ", username=" + username + ", userpassword=" + userpassword + ", firstname="
+				+ firstname + ", lastname=" + lastname + ", emailaddress=" + emailaddress + "]";
+	}
+    
+    public int getId() {
+    	return id;
+    }
+
+	public String getUserName() {
         return username;
     }
  
@@ -43,7 +51,7 @@ public class People {
         this.username = username;
     }
  
-    public String getUserPassWord() {
+    public String getUserPassword() {
         return userpassword;
     }
  
