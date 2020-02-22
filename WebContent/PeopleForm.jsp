@@ -37,26 +37,34 @@
                     <input type="hidden" name="id" value="<c:out value='${people.id}' />" />
                 </c:if>           
             <tr>
-                <th>Name: </th>
+                <th>First Name: </th>
                 <td>
-                    <input type="text" name="name" size="45"
-                            value="<c:out value='${people.name}' />"
+                    <input type="text" name="First Name" size="45"
+                            value="<c:out value='${people.firstname}' />"
                         />
                 </td>
             </tr>
             <tr>
-                <th>Address: </th>
+                <th>Last Name: </th>
                 <td>
-                    <input type="text" name="address" size="45"
-                            value="<c:out value='${people.address}' />"
+                    <input type="text" name="Last Name" size="45"
+                            value="<c:out value='${people.lastname}' />"
                     />
                 </td>
             </tr>
             <tr>
-                <th>Status: </th>
+                <th>Email: </th>
                 <td>
-                    <input type="text" name="status" size="5"
-                            value="<c:out value='${people.status}' />"
+                    <input type="text" name="email" size="5"
+                            value="<c:out value='${people.emailaddress}' />"
+                    />
+                </td>
+            </tr>
+                <tr>
+                <th>Username: </th>
+                <td>
+                    <input type="text" name="username" size="5"
+                            value="<c:out value='${people.username}' />"
                     />
                 </td>
             </tr>
