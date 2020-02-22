@@ -40,13 +40,13 @@ public class PeopleDAO extends HttpServlet {
     protected void connect_func() throws SQLException {
         if (connect == null || connect.isClosed()) {
             try {
-                Class.forName("com.mysql.jdbc.Driver");
+                Class.forName("com.mysql.cj.jdbc.Driver");
             } catch (ClassNotFoundException e) {
                 throw new SQLException(e);
             }
             connect = (Connection) DriverManager
   			      .getConnection("jdbc:mysql://localhost:3306/project?"
-  			          + "user=john&password=pass1234");
+  			          + "user=john&password=pass1234&useSSL=false");
             System.out.println(connect);
         }
     }
@@ -54,7 +54,6 @@ public class PeopleDAO extends HttpServlet {
     
     public List<People> listAllPeople() throws SQLException {
         List<People> listPeople = new ArrayList<People>();        
-        System.out.println("IM Making an array");
         String sql = "SELECT * FROM users";      
         connect_func();      
         statement =  (Statement) connect.createStatement();
