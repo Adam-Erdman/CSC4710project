@@ -6,19 +6,17 @@
     <title>Log-in</title>
 </head>
 <body>
-    <center>
+    <div align="center">
         <h1>Log-in</h1>
         <h2>
             <a href="new">Add New People</a>
             &nbsp;&nbsp;&nbsp;
             <a href="list">List All People</a>
+            &nbsp;&nbsp;&nbsp;
+            <a href="initDB">Initialize DB</a>
         </h2>
-    </center>
-    <div align="center">
         <form action="login">
         <table border="1" cellpadding="5">
-                       
-           
             <tr>
                 <th>Username: </th>
                 <td>
