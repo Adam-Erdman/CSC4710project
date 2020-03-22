@@ -83,6 +83,9 @@ public class ControlServlet extends HttpServlet {
             case "/updateAnimal":
             	updateAnimal(request, response);
                 break;
+            case "/AnimalList":
+            	animalListForm(request, response);
+                break;
             default:          	
             	listPeople(request, response);           	
                 break;
@@ -230,13 +233,7 @@ public class ControlServlet extends HttpServlet {
         peopleDAO.deleteAnimal(id);
         response.sendRedirect("list"); 
     }
-    private void listAnimal(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
-        List<Animals> listAnimal = peopleDAO.listAllAnimals();
-        request.setAttribute("listAnimal", listAnimal);       
-        RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalList.jsp");       
-        dispatcher.forward(request, response);
-    }
+
     private void insertAnimal(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
         String name = request.getParameter("name");
@@ -247,7 +244,7 @@ public class ControlServlet extends HttpServlet {
         
         Animals newAnimals = new Animals(name, species, birthdate, adoptionPrice, traits);
         peopleDAO.insertAnimal(newAnimals);
-        response.sendRedirect("list");
+        response.sendRedirect("AnimalList");
     }
  
     private void updateAnimal(HttpServletRequest request, HttpServletResponse response)
@@ -267,6 +264,13 @@ public class ControlServlet extends HttpServlet {
         peopleDAO.updateAnimal(animals);
         response.sendRedirect("list");
     }
- 
+   
+    private void animalListForm(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        List<Animals> animalListForm = peopleDAO.listAllAnimals();
+        request.setAttribute("animalListForm", animalListForm);       
+        RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalList.jsp");       
+        dispatcher.forward(request, response);
+    }
    
 }
