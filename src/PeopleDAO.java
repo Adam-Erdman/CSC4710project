@@ -186,7 +186,7 @@ public class PeopleDAO extends HttpServlet {
 				" species VARCHAR(50) NOT NULL, " + 
 				" birthdate VARCHAR(50) NOT NULL, " + 
 				" adoptionPrice VARCHAR(50) NOT NULL, " + 
-				" traits VARCHAR(50) not NULL," +
+				" traits VARCHAR(150) not NULL," +
 				" PRIMARY KEY ( id ))"; 
 	
 		statement = connect.createStatement();
