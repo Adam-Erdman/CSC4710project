@@ -71,6 +71,18 @@ public class ControlServlet extends HttpServlet {
             case "/welcome":
             	welcomeForm(request, response);
             	break;
+            case "/insertAnimal":
+            	insertAnimal(request, response);
+                break;
+            case "/deleteAnimal":
+            	deleteAnimal(request, response);
+                break;
+//            case "/edit":
+//                showEditForm(request, response);
+//                break;
+            case "/updateAnimal":
+            	updateAnimal(request, response);
+                break;
             default:          	
             	listPeople(request, response);           	
                 break;
@@ -92,6 +104,7 @@ public class ControlServlet extends HttpServlet {
     	peopleDAO.wipe();
     	String username, userpassword, firstname, lastname, emailaddress;
     	People people; 
+    	
     	
     	//Create root user
     	username = "root" ;
@@ -200,7 +213,7 @@ public class ControlServlet extends HttpServlet {
         peopleDAO.update(people);
         response.sendRedirect("list");
     }
- 
+    
     private void deletePeople(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
         int id = Integer.parseInt(request.getParameter("id"));
@@ -208,4 +221,52 @@ public class ControlServlet extends HttpServlet {
         peopleDAO.delete(id);
         response.sendRedirect("list"); 
     }
+ ///////////////////////part 2/////////////////////////
+    
+    private void deleteAnimal(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        //People people = new People(id);
+        peopleDAO.deleteAnimal(id);
+        response.sendRedirect("list"); 
+    }
+    private void listAnimal(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        List<Animals> listAnimal = peopleDAO.listAllAnimals();
+        request.setAttribute("listAnimal", listAnimal);       
+        RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalList.jsp");       
+        dispatcher.forward(request, response);
+    }
+    private void insertAnimal(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        String name = request.getParameter("name");
+        String species = request.getParameter("species");
+        String birthdate = request.getParameter("birthdate");
+        Double adoptionPrice = Double.parseDouble(request.getParameter("adoptionPrice"));
+        String traits = request.getParameter("traits");
+        
+        Animals newAnimals = new Animals(name, species, birthdate, adoptionPrice, traits);
+        peopleDAO.insertAnimal(newAnimals);
+        response.sendRedirect("list");
+    }
+ 
+    private void updateAnimal(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException {
+        int id = Integer.parseInt(request.getParameter("id"));
+        System.out.println(id);
+        
+        String name = request.getParameter("name");
+        String species = request.getParameter("species");
+        String birthdate = request.getParameter("birthdate");
+        Double adoptionPrice = Double.parseDouble(request.getParameter("adoptionPrice"));
+        String traits = request.getParameter("traits");
+      
+        System.out.println(name);
+        
+        Animals animals = new Animals(id, name, species, birthdate, adoptionPrice, traits);
+        peopleDAO.updateAnimal(animals);
+        response.sendRedirect("list");
+    }
+ 
+   
 }

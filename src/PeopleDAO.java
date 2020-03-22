@@ -179,10 +179,21 @@ public class PeopleDAO extends HttpServlet {
 			" lastname VARCHAR(50) NOT NULL, " + 
 			" emailaddress varchar(50) not NULL," +
 			" PRIMARY KEY ( id ))"; 
+		String deleteTable2 ="DROP TABLE IF EXISTS animals"; //added for part 2 -ae
+		String createTable2 ="CREATE TABLE IF NOT EXISTS animals " +
+				"(id INTEGER not NULL AUTO_INCREMENT, " +
+				" name VARCHAR(50) NOT NULL, " + 
+				" species VARCHAR(50) NOT NULL, " + 
+				" birthdate VARCHAR(50) NOT NULL, " + 
+				" adoptionPrice VARCHAR(50) NOT NULL, " + 
+				" traits FLOAT not NULL," +
+				" PRIMARY KEY ( id ))"; 
 	
 		statement = connect.createStatement();
 	    statement.executeUpdate(deleteTable);
 	    statement.executeUpdate(createTable);
+	    statement.executeUpdate(deleteTable2); //added for part 2 -ae
+	    statement.executeUpdate(createTable2); //added for part 2 -ae
 	    
 	    statement.close();
 	}
@@ -211,4 +222,110 @@ public class PeopleDAO extends HttpServlet {
     
 		
 	}
+	
+	///////////////////////////////// Begin Animal Registration Form //////////////////////////////////// -ae
+    public List<Animals> listAllAnimals() throws SQLException {
+        List<Animals> listAnimals = new ArrayList<Animals>();        
+        String sql = "SELECT * FROM animals";      
+        connect_func();      
+        statement =  (Statement) connect.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+         
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String name = resultSet.getString("name");
+            String species = resultSet.getString("species");
+            String birthdate = resultSet.getString("birthdate");
+            double adoptionPrice = resultSet.getDouble("adoptionPrice");
+            String traits = resultSet.getString("traits");
+                         
+            Animals animals = new Animals( id, name, species, birthdate, adoptionPrice, traits);
+
+            listAnimals.add(animals);
+        }        
+        
+        resultSet.close();
+        statement.close();         
+        disconnect();        
+        return listAnimals;
+    }
+    
+    public boolean insertAnimal(Animals animals) throws SQLException {
+    	connect_func();         
+		String sql = "insert into  animals(name, species, birthdate, adoptionPrice, traits) values (?, ?, ?, ?, ?)";
+		preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+		preparedStatement.setString(1, animals.name);
+		preparedStatement.setString(2, animals.species);
+		preparedStatement.setString(3, animals.birthdate);
+		preparedStatement.setDouble(4, animals.adoptionPrice);
+		preparedStatement.setString(5, animals.traits);
+//		preparedStatement.executeUpdate();
+		
+        boolean rowInserted = preparedStatement.executeUpdate() > 0;
+        preparedStatement.close();
+//        disconnect();
+        return rowInserted;
+    }     
+     
+    public boolean deleteAnimal(int animalId) throws SQLException {
+        String sql = "DELETE FROM animals WHERE id = ?";        
+        connect_func();
+         
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setInt(1, animalId);
+         
+        boolean rowDeleted = preparedStatement.executeUpdate() > 0;
+        preparedStatement.close();
+//        disconnect();
+        return rowDeleted;     
+    }
+     
+    public boolean updateAnimal(Animals animals) throws SQLException {
+        String sql = "update animals set name=?, species =?, birthdate = ?, adoptionPrice = ?,traits = ? where id = ?";
+        connect_func();
+        
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, animals.name);
+        preparedStatement.setString(2, animals.species);
+        preparedStatement.setString(3, animals.birthdate);
+        preparedStatement.setDouble(4, animals.adoptionPrice);
+        preparedStatement.setString(5, animals.traits);
+        preparedStatement.setInt(6, animals.id);
+         
+        boolean rowUpdated = preparedStatement.executeUpdate() > 0;
+        preparedStatement.close();
+//        disconnect();
+        return rowUpdated;     
+    }
+	/**
+	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+	 */
+	
+    public Animals getAnimals(int id) throws SQLException {
+    	Animals animals = null;
+        String sql = "SELECT * FROM animals WHERE id = ?";
+         
+        connect_func();
+         
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+         
+        ResultSet resultSet = preparedStatement.executeQuery();
+         
+        if (resultSet.next()) {
+        	String name = resultSet.getString("name");
+            String species = resultSet.getString("species");
+            String birthdate = resultSet.getString("birthdate");
+            double adoptionPrice = resultSet.getDouble("adoptionPrice");
+            String traits = resultSet.getString("traits");
+             
+            animals = new Animals( id, name, species, birthdate, adoptionPrice, traits);
+            System.out.println(animals);
+        }
+         
+        resultSet.close();
+        statement.close();
+         
+        return animals;
+    }
 }
