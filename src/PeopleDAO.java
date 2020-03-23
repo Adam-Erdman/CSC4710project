@@ -158,11 +158,9 @@ public class PeopleDAO extends HttpServlet {
             String username = resultSet.getString("username");
              
             people = new People( id, username, userpassword, firstname, lastname, emailaddress);
-            System.out.println(people);
         }
-         
+        
         resultSet.close();
-        statement.close();
          
         return people;
     }
@@ -202,26 +200,38 @@ public class PeopleDAO extends HttpServlet {
 		
 		connect_func();
         String sql = "SELECT * FROM users WHERE username = ? AND userpassword = ?";
-         
-        
-         
+                  
         preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
         preparedStatement.setString(1, username);
         preparedStatement.setString(2, userpassword);
          
         ResultSet resultSet = preparedStatement.executeQuery();
         
-        if (resultSet.next()) {
-
-              
-             return true;
-        }
-        
+        if (resultSet.next())              
+             return true;     
         else
         	return false;
-    
-		
 	}
+	
+	public int getUserId(String username, String password) throws SQLException{
+		connect_func();
+        String sql = "SELECT id FROM users WHERE username = ? AND userpassword = ?";
+                  
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, password);
+         
+        ResultSet resultSet = preparedStatement.executeQuery();
+        
+        if (resultSet.next())  {
+        	int id = resultSet.getInt("id");
+         	return id;
+        }
+        
+        return -1;
+	}
+
+	
 	
 	///////////////////////////////// Begin Animal Registration Form //////////////////////////////////// -ae
     public List<Animals> listAllAnimals() throws SQLException {

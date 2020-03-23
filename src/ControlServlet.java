@@ -15,6 +15,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
+import javax.servlet.http.*;  
  
 /**
  * ControllerServlet.java
@@ -25,7 +26,9 @@ import java.sql.PreparedStatement;
 public class ControlServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private PeopleDAO peopleDAO;
- 
+	private HttpSession session = null;
+
+    
     public void init() {
         peopleDAO = new PeopleDAO(); 
     }
@@ -65,11 +68,11 @@ public class ControlServlet extends HttpServlet {
             case "/login":
         		login(request,response); 
             	break;
-            case "/loginForm":
-            	loginForm(request,response); 
-            	break;
             case "/welcome":
             	welcomeForm(request, response);
+            	break;
+            case "/listPeople":
+            	listPeople(request, response);
             	break;
             case "/insertAnimal":
             	insertAnimal(request, response);
@@ -77,20 +80,19 @@ public class ControlServlet extends HttpServlet {
             case "/deleteAnimal":
             	deleteAnimal(request, response);
                 break;
-//            case "/edit":
-//                showEditForm(request, response);
-//                break;
             case "/updateAnimal":
             	updateAnimal(request, response);
                 break;
             case "/AnimalList":
             	animalListForm(request, response);
                 break;
+
             case "/AnimalListFormDropDown":
             	animalListFormDropDown(request, response);
                 break;
-            default:          	
-            	listPeople(request, response);           	
+
+            default:   	
+            	loginForm(request, response);           	
                 break;
             }
         } catch (SQLException ex) {
@@ -124,7 +126,7 @@ public class ControlServlet extends HttpServlet {
 
     	//Insert 14 other users
     	for(int i =1; i < 15; i++) {
-    		username = "user" +i;
+    		username = "user" + i;
     		userpassword = "password" + i;
     		firstname = "name" + i;
     		lastname = "last" + i;
@@ -133,35 +135,67 @@ public class ControlServlet extends HttpServlet {
 	        people = new People(username, userpassword, firstname, lastname, emailaddress);
 	        peopleDAO.insert(people);
     	}
+    	
+    	
+    	for(int i = 0; i < 15; i++) {
+    		String name = "pet" + i;
+    		String species = "species" + i;
+    		String birthdate = "birthday" + i;
+    		Double adoptionPrice = (double) (i*10);
+    		String traits = "traits" + i;
+    		Animals animal = new Animals(name, species, birthdate, adoptionPrice, traits);
+    		peopleDAO.insertAnimal(animal);
+    	}
+    	
         response.sendRedirect("list");		
 	}
 	
 	 private void loginForm(HttpServletRequest request, HttpServletResponse response)
-		        throws ServletException, IOException {
-		            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
-		            dispatcher.forward(request, response);
-			}
+	        throws ServletException, IOException {
+		 
+	            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+	            dispatcher.forward(request, response);
+	}
 	 
 	private void login(HttpServletRequest request, HttpServletResponse response) 
     		throws SQLException, IOException, ServletException{
 		
 		 String username = request.getParameter("username");
-	     String userpassword = request.getParameter("userpassword");
+	     String password = request.getParameter("userpassword");
 	     
-	     if(peopleDAO.findUser(username, userpassword)) {
+	     if(peopleDAO.findUser(username, password)) {
+	    	 int userID = peopleDAO.getUserId(username, password);
+	    	 System.out.println(userID);
+	    	 People user = peopleDAO.getPeople(userID);
+	    	 session = request.getSession();
+	    	 session.setAttribute("userName", user.getUserName());
+	    	 session.setAttribute("firstName", user.getFirstName());
+	    	 session.setAttribute("userID", userID);
+	    	    	 
 	    	 response.sendRedirect("welcome");
 	    	 System.out.println("login successful");
 	     }
 	     else {
 	    	 response.sendRedirect("loginForm");
-	     }
-	     
-	     
+	     }	     
+	}
+	
+	private void logout(HttpServletRequest request, HttpServletResponse response) 
+    		throws SQLException, IOException, ServletException{
+		session = request.getSession();
+		session.invalidate();
+		response.sendRedirect("login.jsp");
 	}
 	
 	private void welcomeForm(HttpServletRequest request, HttpServletResponse response)
 	        throws ServletException, IOException {
-	            RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
+				RequestDispatcher dispatcher;
+				
+				if(session == null) {
+					dispatcher = request.getRequestDispatcher("loginForm");
+				}
+				
+	            dispatcher = request.getRequestDispatcher("welcome.jsp");
 	            dispatcher.forward(request, response);
 		}
 
@@ -186,7 +220,6 @@ public class ControlServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("PeopleForm.jsp");
         request.setAttribute("people", existingPeople);
         dispatcher.forward(request, response);
- 
     }
  
     private void insertPeople(HttpServletRequest request, HttpServletResponse response)
