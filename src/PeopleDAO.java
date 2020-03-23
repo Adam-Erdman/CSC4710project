@@ -264,13 +264,14 @@ public class PeopleDAO extends HttpServlet {
     
     public boolean insertAnimal(Animals animals) throws SQLException {
     	connect_func();         
-		String sql = "insert into  animals(name, species, birthdate, adoptionPrice, traits) values (?, ?, ?, ?, ?)";
+		String sql = "insert into  animals(name, species, birthdate, adoptionPrice, traits, owner) values (?, ?, ?, ?, ?, ?)";
 		preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
 		preparedStatement.setString(1, animals.name);
 		preparedStatement.setString(2, animals.species);
 		preparedStatement.setString(3, animals.birthdate);
 		preparedStatement.setDouble(4, animals.adoptionPrice);
 		preparedStatement.setString(5, animals.traits);
+		preparedStatement.setInt(6, animals.owner);
 //		preparedStatement.executeUpdate();
 		
         boolean rowInserted = preparedStatement.executeUpdate() > 0;
@@ -293,7 +294,7 @@ public class PeopleDAO extends HttpServlet {
     }
      
     public boolean updateAnimal(Animals animals) throws SQLException {
-        String sql = "update animals set name=?, species =?, birthdate = ?, adoptionPrice = ?,traits = ? where id = ?";
+        String sql = "update animals set name=?, species =?, birthdate = ?, adoptionPrice = ?,traits = ?, owner = ?, where id = ?";
         connect_func();
         
         preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
@@ -302,8 +303,9 @@ public class PeopleDAO extends HttpServlet {
         preparedStatement.setString(3, animals.birthdate);
         preparedStatement.setDouble(4, animals.adoptionPrice);
         preparedStatement.setString(5, animals.traits);
-        preparedStatement.setInt(6, animals.id);
-         
+        preparedStatement.setInt(6, animals.owner);
+        preparedStatement.setInt(7, animals.id);
+   
         boolean rowUpdated = preparedStatement.executeUpdate() > 0;
         preparedStatement.close();
 //        disconnect();
