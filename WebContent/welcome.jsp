@@ -11,6 +11,8 @@
            <h2>
             <a href="AnimalList">List an animal</a>
             &nbsp;&nbsp;&nbsp;
+            <a href="AnimalListFormDropDown">Search Animals</a>
+            &nbsp;&nbsp;&nbsp;
             <a href="listPeople">Logout</a>
             &nbsp;&nbsp;&nbsp;
         </h2>
