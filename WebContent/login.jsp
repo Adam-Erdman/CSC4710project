@@ -11,7 +11,7 @@
         <h2>
             <a href="new">Add New People</a>
             &nbsp;&nbsp;&nbsp;
-            <a href="list">List All People</a>
+            <a href="listPeople">List All People</a>
             &nbsp;&nbsp;&nbsp;
             <a href="initDB">Initialize DB</a>
         </h2>

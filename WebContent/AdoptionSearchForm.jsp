@@ -14,7 +14,7 @@
             &nbsp;&nbsp;&nbsp;
             <a href="new">Add New People</a>
             &nbsp;&nbsp;&nbsp;
-            <a href="list">List All People</a>
+            <a href="listPeople">List All People</a>
         </h2>
     </center>
     <div align="center">

@@ -275,7 +275,7 @@ public class ControlServlet extends HttpServlet {
 	 private void animalRegistrationForm(HttpServletRequest request, HttpServletResponse response)
 		        throws ServletException, IOException {
 			 
-		            RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalRegistationForm.jsp");
+		            RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalRegistrationForm.jsp");
 		            dispatcher.forward(request, response);
 		}
 
