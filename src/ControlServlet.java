@@ -86,7 +86,9 @@ public class ControlServlet extends HttpServlet {
             case "/AnimalList":
             	animalListForm(request, response);
                 break;
-
+            case "/AnimalRegistrationForm":
+            	animalRegistrationForm(request, response);
+                break;
             case "/AnimalListFormDropDown":
             	animalListFormDropDown(request, response);
                 break;
@@ -270,6 +272,12 @@ public class ControlServlet extends HttpServlet {
         peopleDAO.deleteAnimal(id);
         response.sendRedirect("list"); 
     }
+	 private void animalRegistrationForm(HttpServletRequest request, HttpServletResponse response)
+		        throws ServletException, IOException {
+			 
+		            RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalRegistationForm.jsp");
+		            dispatcher.forward(request, response);
+		}
 
     private void insertAnimal(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {

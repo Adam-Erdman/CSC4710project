@@ -13,6 +13,8 @@
             &nbsp;&nbsp;&nbsp;
             <a href="AnimalListFormDropDown">Search Animals</a>
             &nbsp;&nbsp;&nbsp;
+             <a href="AnimalRegistrationForm">Animal Registration</a>
+            &nbsp;&nbsp;&nbsp;
             <a href="listPeople">Logout</a>
             &nbsp;&nbsp;&nbsp;
         </h2>
