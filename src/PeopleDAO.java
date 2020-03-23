@@ -262,6 +262,33 @@ public class PeopleDAO extends HttpServlet {
         return listAnimals;
     }
     
+    public List<Animals> listByTrait() throws SQLException {
+        List<Animals> listAnimals = new ArrayList<Animals>();        
+        String sql = "SELECT * FROM animals WHERE animals.traits = traits";      
+        connect_func();      
+        statement =  (Statement) connect.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+         
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String name = resultSet.getString("name");
+            String species = resultSet.getString("species");
+            String birthdate = resultSet.getString("birthdate");
+            double adoptionPrice = resultSet.getDouble("adoptionPrice");
+            String traits = resultSet.getString("traits");
+            int owner = resultSet.getInt("owner");
+                         
+            Animals animals = new Animals( id, name, species, birthdate, adoptionPrice, traits, owner);
+
+            listAnimals.add(animals);
+        }        
+        
+        resultSet.close();
+        statement.close();         
+        disconnect();        
+        return listAnimals;
+    }
+    
     public boolean insertAnimal(Animals animals) throws SQLException {
     	connect_func();         
 		String sql = "insert into  animals(name, species, birthdate, adoptionPrice, traits, owner) values (?, ?, ?, ?, ?, ?)";

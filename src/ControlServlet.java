@@ -94,7 +94,9 @@ public class ControlServlet extends HttpServlet {
             case "/AnimalListFormDropDown":
             	animalListFormDropDown(request, response);
                 break;
-                
+            case "/SearchByTrait":
+            	searchByTrait(request, response);
+                break;
 
             default:   	
             	loginForm(request, response);           	
@@ -323,6 +325,13 @@ public class ControlServlet extends HttpServlet {
         List<Animals> animalListFormDropDown = peopleDAO.listAllAnimals();
         request.setAttribute("animalListFormDropDown", animalListFormDropDown);       
         RequestDispatcher dispatcher = request.getRequestDispatcher("AdoptionSearchForm.jsp");       
+        dispatcher.forward(request, response);
+    }
+    private void searchByTrait(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        List<Animals> searchByTrait = peopleDAO.listByTrait();
+        request.setAttribute("searchByTrait", searchByTrait);       
+        RequestDispatcher dispatcher = request.getRequestDispatcher("SearchByTraitList.jsp");       
         dispatcher.forward(request, response);
     }
    

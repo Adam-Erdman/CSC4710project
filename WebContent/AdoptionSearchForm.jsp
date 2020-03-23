@@ -20,7 +20,7 @@
     <div align="center">
        
    
-       
+       <form action="SearchByTrait" method="post">
        <label for="animals">Choose a trait:</label>
 			    
 			
@@ -29,7 +29,8 @@
 			  <option value="<c:out value="${animals.getTraits()}" />"><c:out value="${animals.getTraits()}" /></option>
 			  </c:forEach>
 			</select>
-      
+      <input type="submit" value="Save">
+	</form>
         
         
     </div>   
