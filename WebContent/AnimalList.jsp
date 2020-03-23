@@ -27,7 +27,7 @@
                 <th>Birthdate</th>
                 <th>Adoption Price</th>
                 <th>Traits</th>
-                
+                <th>Owner</th>
             </tr>
             <c:forEach items="${animalListForm}" var="animals">
                 <tr>
@@ -36,7 +36,7 @@
                     <td><c:out value="${animals.getBirthdate()}" /></td>
                     <td><c:out value="${animals.getAdoptionPrice()}" /></td>
                     <td><c:out value="${animals.getTraits()}" /></td>
-                               
+                    <td><c:out value="${animals.getOwner()}" /></td>                              
                 </tr>
             </c:forEach>
         </table>
