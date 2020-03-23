@@ -10,11 +10,11 @@
     <center>
         <h1>Search Adoption Registry</h1>
         <h2>
-        	<a href="loginForm">Log-in</a>
+        	<a href="AnimalList">List all animals</a>
             &nbsp;&nbsp;&nbsp;
-            <a href="new">Add New People</a>
+           <a href="welcome">Home</a>
             &nbsp;&nbsp;&nbsp;
-            <a href="listPeople">List All People</a>
+            
         </h2>
     </center>
     <div align="center">

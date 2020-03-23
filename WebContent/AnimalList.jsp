@@ -10,11 +10,11 @@
     <center>
         <h1>Adopt A Pet</h1>
         <h2>
-            <a href="new">Add New People</a>
-           		&nbsp;&nbsp;&nbsp;
-            <a href="listPeople">List All People</a>
-            	&nbsp;&nbsp;&nbsp;
-            <a href="initDB">Initialize DB</a>
+           <a href="AnimalListFormDropDown">Search Animals</a>
+            &nbsp;&nbsp;&nbsp;
+            <a href="welcome">Home</a>
+            &nbsp;&nbsp;&nbsp;
+            
              
         </h2>
     </center>

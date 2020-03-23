@@ -9,7 +9,7 @@
     <center>
         <h1>Successful Log-in ${userName}!</h1>
            <h2>
-            <a href="AnimalList">List an animal</a>
+            <a href="AnimalList">List all animals</a>
             &nbsp;&nbsp;&nbsp;
             <a href="AnimalListFormDropDown">Search Animals</a>
             &nbsp;&nbsp;&nbsp;

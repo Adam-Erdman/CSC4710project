@@ -11,9 +11,9 @@
         <h2>
         	<a href="AnimalListFormDropDown">Search Animals</a>
             &nbsp;&nbsp;&nbsp;
-            <a href="new">Add New People</a>
+            <a href="welcome">Home</a>
             &nbsp;&nbsp;&nbsp;
-            <a href="listPeople">List All People</a>
+            
         </h2>
     </center>
     <div align="center">
