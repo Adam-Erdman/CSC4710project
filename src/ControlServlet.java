@@ -60,14 +60,16 @@ public class ControlServlet extends HttpServlet {
             	updatePeople(request, response);
                 break;
             case "/initDB":
-            	initDBForm(request,response); 
+            	initDBForm(request, response); 
             	break;
             case "/resetDB":
-        		initDB(request,response); 
+        		initDB(request, response); 
             	break;
             case "/login":
-        		login(request,response); 
+        		login(request, response); 
             	break;
+            case "/logout":
+            	logout(request, response);
             case "/welcome":
             	welcomeForm(request, response);
             	break;
@@ -92,6 +94,7 @@ public class ControlServlet extends HttpServlet {
             case "/AnimalListFormDropDown":
             	animalListFormDropDown(request, response);
                 break;
+                
 
             default:   	
             	loginForm(request, response);           	
@@ -155,9 +158,9 @@ public class ControlServlet extends HttpServlet {
 	
 	 private void loginForm(HttpServletRequest request, HttpServletResponse response)
 	        throws ServletException, IOException {
-		 
-	            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
-	            dispatcher.forward(request, response);
+	 
+            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+            dispatcher.forward(request, response);
 	}
 	 
 	private void login(HttpServletRequest request, HttpServletResponse response) 
@@ -191,15 +194,10 @@ public class ControlServlet extends HttpServlet {
 	}
 	
 	private void welcomeForm(HttpServletRequest request, HttpServletResponse response)
-	        throws ServletException, IOException {
-				RequestDispatcher dispatcher;
-				
-				if(session == null) {
-					dispatcher = request.getRequestDispatcher("loginForm");
-				}
-				
-	            dispatcher = request.getRequestDispatcher("welcome.jsp");
-	            dispatcher.forward(request, response);
+        throws ServletException, IOException {
+			RequestDispatcher dispatcher;
+            dispatcher = request.getRequestDispatcher("welcome.jsp");
+            dispatcher.forward(request, response);
 		}
 
 	private void listPeople(HttpServletRequest request, HttpServletResponse response)
