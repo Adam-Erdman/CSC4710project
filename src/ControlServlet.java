@@ -143,7 +143,8 @@ public class ControlServlet extends HttpServlet {
     		String birthdate = "birthday" + i;
     		Double adoptionPrice = (double) (i*10);
     		String traits = "traits" + i;
-    		Animals animal = new Animals(name, species, birthdate, adoptionPrice, traits);
+    		int owner = i;
+    		Animals animal = new Animals(name, species, birthdate, adoptionPrice, traits, owner);
     		peopleDAO.insertAnimal(animal);
     	}
     	
@@ -277,8 +278,9 @@ public class ControlServlet extends HttpServlet {
         String birthdate = request.getParameter("birthdate");
         Double adoptionPrice = Double.parseDouble(request.getParameter("adoptionPrice"));
         String traits = request.getParameter("traits");
+        Integer owner = Integer.parseInt(request.getParameter("owner"));
         
-        Animals newAnimals = new Animals(name, species, birthdate, adoptionPrice, traits);
+        Animals newAnimals = new Animals(name, species, birthdate, adoptionPrice, traits, owner);
         peopleDAO.insertAnimal(newAnimals);
         response.sendRedirect("AnimalList");
     }
@@ -293,10 +295,11 @@ public class ControlServlet extends HttpServlet {
         String birthdate = request.getParameter("birthdate");
         Double adoptionPrice = Double.parseDouble(request.getParameter("adoptionPrice"));
         String traits = request.getParameter("traits");
-      
+        int owner = Integer.parseInt(request.getParameter("owner"));
+        
         System.out.println(name);
         
-        Animals animals = new Animals(id, name, species, birthdate, adoptionPrice, traits);
+        Animals animals = new Animals(id, name, species, birthdate, adoptionPrice, traits, owner);
         peopleDAO.updateAnimal(animals);
         response.sendRedirect("list");
     }

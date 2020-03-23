@@ -7,6 +7,7 @@ public class Animals {
     protected String birthdate;
     protected double adoptionPrice;
     protected String traits; //how do we want to implement this? Array of strings?? -AE
+    protected int owner;
  
     public Animals() {
     	
@@ -16,21 +17,23 @@ public class Animals {
         this.id = id;
     }
  
-    public Animals(int id, String name, String species, String birthdate, double adoptionPrice, String traits) {
+    public Animals(int id, String name, String species, String birthdate, double adoptionPrice, String traits, int owner) {
         this.name = name;
         this.species = species;
         this.birthdate = birthdate;
         this.adoptionPrice = adoptionPrice;
         this.traits = traits;
+        this.owner = owner;
         this.id = id;
     }
     
-    public Animals(String name, String species, String birthdate, double adoptionPrice, String traits) {
+    public Animals(String name, String species, String birthdate, double adoptionPrice, String traits, int owner) {
     	this.name = name;
         this.species = species;
         this.birthdate = birthdate;
         this.adoptionPrice = adoptionPrice;
         this.traits = traits;
+        this.owner = owner;
   }
  
     @Override
@@ -83,5 +86,13 @@ public class Animals {
         this.traits = traits;
     }
  
+    public int getOwner() {
+    	return owner;
+    }
+    
+    public void setOwner(int owner) {
+    	this.owner = owner; 
+    }
+    
    
 }

@@ -185,6 +185,7 @@ public class PeopleDAO extends HttpServlet {
 				" birthdate VARCHAR(50) NOT NULL, " + 
 				" adoptionPrice VARCHAR(50) NOT NULL, " + 
 				" traits VARCHAR(150) not NULL," +
+				" owner INTEGER not NULL," +
 				" PRIMARY KEY ( id ))"; 
 	
 		statement = connect.createStatement();
@@ -248,8 +249,9 @@ public class PeopleDAO extends HttpServlet {
             String birthdate = resultSet.getString("birthdate");
             double adoptionPrice = resultSet.getDouble("adoptionPrice");
             String traits = resultSet.getString("traits");
+            int owner = resultSet.getInt("owner");
                          
-            Animals animals = new Animals( id, name, species, birthdate, adoptionPrice, traits);
+            Animals animals = new Animals( id, name, species, birthdate, adoptionPrice, traits, owner);
 
             listAnimals.add(animals);
         }        
@@ -328,8 +330,9 @@ public class PeopleDAO extends HttpServlet {
             String birthdate = resultSet.getString("birthdate");
             double adoptionPrice = resultSet.getDouble("adoptionPrice");
             String traits = resultSet.getString("traits");
+            int owner = resultSet.getInt("owner");
              
-            animals = new Animals( id, name, species, birthdate, adoptionPrice, traits);
+            animals = new Animals( id, name, species, birthdate, adoptionPrice, traits, owner);
             System.out.println(animals);
         }
          
