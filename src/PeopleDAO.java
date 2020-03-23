@@ -264,7 +264,7 @@ public class PeopleDAO extends HttpServlet {
     
     public List<Animals> listByTrait() throws SQLException {
         List<Animals> listAnimals = new ArrayList<Animals>();        
-        String sql = "SELECT * FROM animals WHERE animals.traits = traits";      
+        String sql = "SELECT * FROM animals WHERE traits = ${param.animals}";      
         connect_func();      
         statement =  (Statement) connect.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
@@ -288,6 +288,7 @@ public class PeopleDAO extends HttpServlet {
         disconnect();        
         return listAnimals;
     }
+
     
     public boolean insertAnimal(Animals animals) throws SQLException {
     	connect_func();         

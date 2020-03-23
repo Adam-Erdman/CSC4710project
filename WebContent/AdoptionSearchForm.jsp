@@ -29,7 +29,7 @@
 			  <option value="<c:out value="${animals.getTraits()}" />"><c:out value="${animals.getTraits()}" /></option>
 			  </c:forEach>
 			</select>
-      <input type="submit" value="Save">
+      <input type="submit" value="Submit">
 	</form>
         
         
