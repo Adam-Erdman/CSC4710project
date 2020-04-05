@@ -3,34 +3,29 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <html>
 <head>
-    <title>People Application</title>
+	<c:if test="${people != null}">
+    	<title>Edit User</title>
+     </c:if>
+    <c:if test="${people == null}">
+    	<title>Registration</title>
+    </c:if>
 </head>
 <body>
-    <center>
-        <h1>People Management</h1>
-        <h2>
-        	<a href="loginForm">Log-in</a>
-            &nbsp;&nbsp;&nbsp;
-            <a href="new">Add New People</a>
-            &nbsp;&nbsp;&nbsp;
-            <a href="listPeople">List All People</a>
-        </h2>
-    </center>
     <div align="center">
         <c:if test="${people != null}">
-            <form action="update" method="post">
+            <form action="updateUser" method="post">
         </c:if>
         <c:if test="${people == null}">
-            <form action="insert" method="post">
+            <form action="insertUser" method="post">
         </c:if>
         <table border="1" cellpadding="5">
             <caption>
                 <h2>
                     <c:if test="${people != null}">
-                        Edit People
+                        Edit User
                     </c:if>
                     <c:if test="${people == null}">
-                        Add New People
+                       	Registration Form
                     </c:if>
                 </h2>
             </caption>

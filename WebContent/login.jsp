@@ -9,10 +9,6 @@
     <div align="center">
         <h1>Log-in</h1>
         <h2>
-            <a href="new">Add New People</a>
-            &nbsp;&nbsp;&nbsp;
-            <a href="listPeople">List All People</a>
-            &nbsp;&nbsp;&nbsp;
             <a href="initDB">Initialize DB</a>
         </h2>
         <form action="login">
@@ -36,6 +32,7 @@
             </tr>
         </table>
         </form>
+        New user? Click <a href="newUser">here</a> to sign up.
     </div>   
 </body>
 </html>

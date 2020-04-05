@@ -44,37 +44,35 @@ public class ControlServlet extends HttpServlet {
         System.out.println(action);
         try {
             switch (action) {
-            case "/new":
+            case "/newUser":
                 showNewForm(request, response);
                 break;
-            case "/insert":
+            case "/insertUser":
             	insertPeople(request, response);
                 break;
-            case "/delete":
+            case "/deleteUser":
             	deletePeople(request, response);
                 break;
-            case "/edit":
+            case "/editUser":
                 showEditForm(request, response);
                 break;
-            case "/update":
+            case "/updateUser":
             	updatePeople(request, response);
                 break;
-            case "/initDB":
-            	initDBForm(request, response); 
+            case "/listUsers":
+            	listPeople(request, response);
             	break;
-            case "/resetDB":
+            case "/initDB":
         		initDB(request, response); 
             	break;
             case "/login":
         		login(request, response); 
             	break;
-            case "/logout":
-            	logout(request, response);
             case "/welcome":
             	welcomeForm(request, response);
             	break;
-            case "/listPeople":
-            	listPeople(request, response);
+            case "/logout":
+            	logout(request, response);
             	break;
             case "/insertAnimal":
             	insertAnimal(request, response);
@@ -97,20 +95,21 @@ public class ControlServlet extends HttpServlet {
             case "/SearchByTrait":
             	searchByTrait(request, response);
                 break;
-
             default:   	
-            	loginForm(request, response);           	
-                break;
+            	pageNotFound(request,response);
+            	break;
             }
         } catch (SQLException ex) {
             throw new ServletException(ex);
         }
     }
     
-    private void initDBForm(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-            RequestDispatcher dispatcher = request.getRequestDispatcher("InitDB.jsp");
-            dispatcher.forward(request, response);
+    private void pageNotFound(HttpServletRequest request, HttpServletResponse response) 
+    		throws ServletException, IOException {
+    	String urlInfo = request.getServletPath();
+    	request.setAttribute("urlInfo", urlInfo);
+    	RequestDispatcher dispatcher = request.getRequestDispatcher("pageNotFound.jsp");
+        dispatcher.forward(request, response);
 	}
 
 	private void initDB(HttpServletRequest request, HttpServletResponse response) 
@@ -119,7 +118,6 @@ public class ControlServlet extends HttpServlet {
     	peopleDAO.wipe();
     	String username, userpassword, firstname, lastname, emailaddress;
     	People people; 
-    	
     	
     	//Create root user
     	username = "root" ;
@@ -134,7 +132,7 @@ public class ControlServlet extends HttpServlet {
     	//Insert 14 other users
     	for(int i =1; i < 15; i++) {
     		username = "user" + i;
-    		userpassword = "password" + i;
+    		userpassword = "pass" + i;
     		firstname = "name" + i;
     		lastname = "last" + i;
     		emailaddress = username + "@gmail.com";
@@ -143,7 +141,7 @@ public class ControlServlet extends HttpServlet {
 	        peopleDAO.insert(people);
     	}
     	
-    	
+    	//Insert animals
     	for(int i = 0; i < 15; i++) {
     		String name = "pet" + i;
     		String species = "species" + i;
@@ -155,14 +153,7 @@ public class ControlServlet extends HttpServlet {
     		peopleDAO.insertAnimal(animal);
     	}
     	
-        response.sendRedirect("list");		
-	}
-	
-	 private void loginForm(HttpServletRequest request, HttpServletResponse response)
-	        throws ServletException, IOException {
-	 
-            RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
-            dispatcher.forward(request, response);
+        response.sendRedirect("welcome");		
 	}
 	 
 	private void login(HttpServletRequest request, HttpServletResponse response) 
@@ -184,23 +175,29 @@ public class ControlServlet extends HttpServlet {
 	    	 System.out.println("login successful");
 	     }
 	     else {
-	    	 response.sendRedirect("loginForm");
+	    	 response.sendRedirect("login.jsp");
 	     }	     
 	}
 	
 	private void logout(HttpServletRequest request, HttpServletResponse response) 
     		throws SQLException, IOException, ServletException{
 		session = request.getSession();
-		session.invalidate();
+		if (session != null && session.getAttribute("userID") != null) 
+		    session.invalidate();
 		response.sendRedirect("login.jsp");
 	}
 	
 	private void welcomeForm(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
-			RequestDispatcher dispatcher;
-            dispatcher = request.getRequestDispatcher("welcome.jsp");
-            dispatcher.forward(request, response);
-		}
+			throws ServletException, IOException {
+		session = request.getSession();
+		if (session != null && session.getAttribute("userID") != null) {  	    	 
+	    	 response.sendRedirect("welcome.jsp");
+	    	 System.out.println("logged in with " + session.getAttribute("userName"));
+	     }
+	     else {
+	    	 response.sendRedirect("login.jsp");
+	     }	 
+	}
 
 	private void listPeople(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
@@ -235,7 +232,7 @@ public class ControlServlet extends HttpServlet {
         
         People newPeople = new People(username, userpassword, firstname, lastname, emailaddress);
         peopleDAO.insert(newPeople);
-        response.sendRedirect("list");
+        response.sendRedirect("login.jsp");
     }
  
     private void updatePeople(HttpServletRequest request, HttpServletResponse response)
@@ -253,7 +250,7 @@ public class ControlServlet extends HttpServlet {
         
         People people = new People(id, username, userpassword, firstname, lastname, emailaddress);
         peopleDAO.update(people);
-        response.sendRedirect("list");
+        response.sendRedirect("welcome.jsp");
     }
     
     private void deletePeople(HttpServletRequest request, HttpServletResponse response)
@@ -261,7 +258,7 @@ public class ControlServlet extends HttpServlet {
         int id = Integer.parseInt(request.getParameter("id"));
         //People people = new People(id);
         peopleDAO.delete(id);
-        response.sendRedirect("list"); 
+        response.sendRedirect("listUsers"); 
     }
  ///////////////////////part 2/////////////////////////
     
@@ -273,11 +270,10 @@ public class ControlServlet extends HttpServlet {
         response.sendRedirect("list"); 
     }
 	 private void animalRegistrationForm(HttpServletRequest request, HttpServletResponse response)
-		        throws ServletException, IOException {
-			 
-		            RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalRegistrationForm.jsp");
-		            dispatcher.forward(request, response);
-		}
+	        throws ServletException, IOException {
+        RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalRegistrationForm.jsp");
+        dispatcher.forward(request, response);
+	}
 
     private void insertAnimal(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {

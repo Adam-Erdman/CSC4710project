@@ -6,8 +6,8 @@
     <title>Welcome!</title>
 </head>
 <body>
-    <center>
-        <h1>Successful Log-in ${userName}!</h1>
+    <div align="center">
+        <h1>Welcome ${userName}!</h1>
            <h2>
             <a href="AnimalList">List all animals</a>
             &nbsp;&nbsp;&nbsp;
@@ -15,10 +15,13 @@
             &nbsp;&nbsp;&nbsp;
              <a href="AnimalRegistrationForm">Animal Registration</a>
             &nbsp;&nbsp;&nbsp;
-            <a href="listPeople">Logout</a>
+            <c:if test = "${userName == 'root'}">
+                <a href="adminControls.jsp">Root Controls</a>
+            	&nbsp;&nbsp;&nbsp;
+            </c:if>
+            <a href="logout">Logout</a>
             &nbsp;&nbsp;&nbsp;
         </h2>
-    </center>
-    
+    </div>
 </body>
 </html>

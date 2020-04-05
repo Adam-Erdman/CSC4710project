@@ -10,12 +10,11 @@
     <center>
         <h1>People Management</h1>
         <h2>
-            <a href="new">Add New People</a>
+            <a href="newUser">Add New People</a>
            		&nbsp;&nbsp;&nbsp;
             <a href="listPeople">List All People</a>
             	&nbsp;&nbsp;&nbsp;
             <a href="initDB">Initialize DB</a>
-             
         </h2>
     </center>
     <div align="center">
@@ -36,9 +35,9 @@
                     <td><c:out value="${people.getFirstName()}" /></td>
                     <td><c:out value="${people.getLastName()}" /></td>
                     <td><c:out value="${people.getEmailAddress()}" /></td>
-                    <td>    <a href="edit?id=<c:out value='${people.getId()}' />">Edit</a>
+                    <td>    <a href="editUser?id=<c:out value='${people.getId()}' />">Edit</a>
                         &nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="delete?id=<c:out value='${people.getId()}' />">Delete</a></td>               
+                        <a href="deleteUser?id=<c:out value='${people.getId()}' />">Delete</a></td>               
                 </tr>
             </c:forEach>
         </table>

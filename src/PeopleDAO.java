@@ -31,7 +31,6 @@ public class PeopleDAO extends HttpServlet {
 	private ResultSet resultSet = null;
 	
 	public PeopleDAO() {
-
     }
 	       
     /**
@@ -168,8 +167,8 @@ public class PeopleDAO extends HttpServlet {
 	public void wipe() throws SQLException{
 		connect_func();
 		
-		String deleteTable = "DROP TABLE IF EXISTS users";
-		String createTable = "CREATE TABLE IF NOT EXISTS users " +
+		String deleteUserTable = "DROP TABLE IF EXISTS users";
+		String createUserTable = "CREATE TABLE IF NOT EXISTS users " +
 			"(id INTEGER not NULL AUTO_INCREMENT, " +
 			" username VARCHAR(50) NOT NULL, " + 
 			" userpassword VARCHAR(50) NOT NULL, " + 
@@ -177,22 +176,22 @@ public class PeopleDAO extends HttpServlet {
 			" lastname VARCHAR(50) NOT NULL, " + 
 			" emailaddress varchar(50) not NULL," +
 			" PRIMARY KEY ( id ))"; 
-		String deleteTable2 ="DROP TABLE IF EXISTS animals"; //added for part 2 -ae
-		String createTable2 ="CREATE TABLE IF NOT EXISTS animals " +
+		String deleteAnimalTable ="DROP TABLE IF EXISTS animals"; //added for part 2 -ae
+		String createAnimalTable ="CREATE TABLE IF NOT EXISTS animals " +
 				"(id INTEGER not NULL AUTO_INCREMENT, " +
 				" name VARCHAR(50) NOT NULL, " + 
 				" species VARCHAR(50) NOT NULL, " + 
 				" birthdate VARCHAR(50) NOT NULL, " + 
-				" adoptionPrice VARCHAR(50) NOT NULL, " + 
+				" adoptionPrice FLOAT(50) NOT NULL, " + 
 				" traits VARCHAR(150) not NULL," +
 				" owner INTEGER not NULL," +
 				" PRIMARY KEY ( id ))"; 
 	
 		statement = connect.createStatement();
-	    statement.executeUpdate(deleteTable);
-	    statement.executeUpdate(createTable);
-	    statement.executeUpdate(deleteTable2); //added for part 2 -ae
-	    statement.executeUpdate(createTable2); //added for part 2 -ae
+	    statement.executeUpdate(deleteUserTable);
+	    statement.executeUpdate(createUserTable);
+	    statement.executeUpdate(deleteAnimalTable); //added for part 2 -ae
+	    statement.executeUpdate(createAnimalTable); //added for part 2 -ae
 	    
 	    statement.close();
 	}
