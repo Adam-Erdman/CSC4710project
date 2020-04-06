@@ -4,17 +4,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-    <title>Animal List Application</title>
+    <title>My Pets</title>
 </head>
 <body>
     <center>
-        <h1>Adopt A Pet</h1>
+        <h1>My Current Pets</h1>
         <h2>
            <a href="AnimalListFormDropDown">Search Animals</a>
             &nbsp;&nbsp;&nbsp;
-           <a href="myAnimals">My animals</a>
-            &nbsp;&nbsp;&nbsp;	
-           <a href="welcome">Home</a>
+            <a href="AnimalList">All animals</a>
+            &nbsp;&nbsp;&nbsp;
+            <a href="welcome">Home</a>
+            &nbsp;&nbsp;&nbsp;
         </h2>
     </center>
     <div align="center">
@@ -26,7 +27,7 @@
                 <th>Owner</th>
                 <th>Adoption Price</th>
             </tr>
-            <c:forEach items="${animalListForm}" var="animals">
+            <c:forEach items="${animals}" var="animals">
                 <tr>
                     <td><c:out value="${animals.getName()}" /></td>
                     <td><c:out value="${animals.getSpecies()}" /></td>

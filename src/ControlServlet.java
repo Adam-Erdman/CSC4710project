@@ -6,6 +6,7 @@ import java.util.List;
  
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -95,6 +96,9 @@ public class ControlServlet extends HttpServlet {
             case "/SearchByTrait":
             	searchByTrait(request, response);
                 break;
+            case "/myAnimals":
+            	searchByUser(request,response);
+            	break;
             default:   	
             	pageNotFound(request,response);
             	break;
@@ -193,6 +197,9 @@ public class ControlServlet extends HttpServlet {
 		if (session != null && session.getAttribute("userID") != null) {  	    	 
 	    	 response.sendRedirect("welcome.jsp");
 	    	 System.out.println("logged in with " + session.getAttribute("userName"));
+	 		 ServletOutputStream out = response.getOutputStream();
+			 out.print("test");
+			 out.close();
 	     }
 	     else {
 	    	 response.sendRedirect("login.jsp");
@@ -291,9 +298,8 @@ public class ControlServlet extends HttpServlet {
  
     private void updateAnimal(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException {
+    	
         int id = Integer.parseInt(request.getParameter("id"));
-        System.out.println(id);
-        
         String name = request.getParameter("name");
         String species = request.getParameter("species");
         String birthdate = request.getParameter("birthdate");
@@ -330,5 +336,13 @@ public class ControlServlet extends HttpServlet {
         RequestDispatcher dispatcher = request.getRequestDispatcher("SearchByTraitList.jsp");       
         dispatcher.forward(request, response);
     }
-   
+    
+    private void searchByUser(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        int userID =  (Integer) (session.getAttribute("userID"));
+        List<Animals> animals = peopleDAO.searchByUser(userID);
+        request.setAttribute("animals", animals);       
+        RequestDispatcher dispatcher = request.getRequestDispatcher("myAnimals.jsp");       
+        dispatcher.forward(request, response);
+    }
 }

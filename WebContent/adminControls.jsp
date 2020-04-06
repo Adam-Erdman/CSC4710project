@@ -9,7 +9,7 @@
     <div align="center">
         <h1>Root controls</h1>
            <h2>
-            <a href="AnimalList">List all Animals</a>
+            <a href="AnimalList">List All Animals</a>
             &nbsp;&nbsp;&nbsp;
             <a href="listUsers">List All Users</a>
             &nbsp;&nbsp;&nbsp;
