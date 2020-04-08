@@ -17,9 +17,11 @@
             &nbsp;&nbsp;&nbsp;
             <a href="AnimalListFormDropDown">Search Animals</a>
             &nbsp;&nbsp;&nbsp;
-             <a href="AnimalRegistrationForm">Animal Registration</a>
+            <a href="AnimalRegistrationForm">Animal Registration</a>
             &nbsp;&nbsp;&nbsp;
             <a href="initDB">Initialize Database</a>
+            &nbsp;&nbsp;&nbsp;
+            <a href="welcome">Home</a>
             &nbsp;&nbsp;&nbsp;
             <a href="logout">Logout</a>
             &nbsp;&nbsp;&nbsp;

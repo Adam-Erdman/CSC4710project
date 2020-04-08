@@ -33,9 +33,6 @@ public class PeopleDAO extends HttpServlet {
 	public PeopleDAO() {
     }
 	       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
     protected void connect_func() throws SQLException {
         if (connect == null || connect.isClosed()) {
             try {
@@ -49,7 +46,6 @@ public class PeopleDAO extends HttpServlet {
             System.out.println(connect);
         }
     }
-    
     
     public List<People> listAllPeople() throws SQLException {
         List<People> listPeople = new ArrayList<People>();        
@@ -101,12 +97,17 @@ public class PeopleDAO extends HttpServlet {
     }     
      
     public boolean delete(int peopleid) throws SQLException {
-        String sql = "DELETE FROM users WHERE id = ?";        
+        String sql1 = "DELETE FROM animals WHERE ownerID = ?";      
+        String sql2 = "DELETE FROM users WHERE id = ?";      
+        
         connect_func();
          
-        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql1);
         preparedStatement.setInt(1, peopleid);
-         
+        preparedStatement.executeUpdate();
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql2);
+        preparedStatement.setInt(1, peopleid);
+        
         boolean rowDeleted = preparedStatement.executeUpdate() > 0;
         preparedStatement.close();
 //        disconnect();
@@ -130,15 +131,8 @@ public class PeopleDAO extends HttpServlet {
 //        disconnect();
         return rowUpdated;     
     }
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		// TODO Auto-generated method stub
-		doGet(request, response);
-	}
-	
-    public People getPeople(int id) throws SQLException {
+
+    public People getUser(int id) throws SQLException {
     	People people = null;
         String sql = "SELECT * FROM users WHERE id = ?";
          
@@ -178,19 +172,20 @@ public class PeopleDAO extends HttpServlet {
 			" PRIMARY KEY ( id ))"; 
 		String deleteAnimalTable ="DROP TABLE IF EXISTS animals"; //added for part 2 -ae
 		String createAnimalTable ="CREATE TABLE IF NOT EXISTS animals " +
-				"(id INTEGER not NULL AUTO_INCREMENT, " +
+				"(animalID INTEGER not NULL AUTO_INCREMENT, " +
 				" name VARCHAR(50) NOT NULL, " + 
 				" species VARCHAR(50) NOT NULL, " + 
 				" birthdate VARCHAR(50) NOT NULL, " + 
 				" adoptionPrice FLOAT(50) NOT NULL, " + 
 				" traits VARCHAR(150) not NULL," +
-				" owner INTEGER not NULL," +
-				" PRIMARY KEY ( id ))"; 
+				" ownerID INTEGER not NULL," +
+				" FOREIGN KEY (ownerID) REFERENCES users(id),\r\n" + 
+				" PRIMARY KEY ( animalID ))"; 
 	
 		statement = connect.createStatement();
+	    statement.executeUpdate(deleteAnimalTable); //added for part 2 -ae
 	    statement.executeUpdate(deleteUserTable);
 	    statement.executeUpdate(createUserTable);
-	    statement.executeUpdate(deleteAnimalTable); //added for part 2 -ae
 	    statement.executeUpdate(createAnimalTable); //added for part 2 -ae
 	    
 	    statement.close();
@@ -207,10 +202,7 @@ public class PeopleDAO extends HttpServlet {
          
         ResultSet resultSet = preparedStatement.executeQuery();
         
-        if (resultSet.next())              
-             return true;     
-        else
-        	return false;
+        return resultSet.next();
 	}
 	
 	public int getUserId(String username, String password) throws SQLException{
@@ -242,15 +234,15 @@ public class PeopleDAO extends HttpServlet {
         ResultSet resultSet = statement.executeQuery(sql);
          
         while (resultSet.next()) {
-            int id = resultSet.getInt("id");
+            int animalID = resultSet.getInt("animalID");
             String name = resultSet.getString("name");
             String species = resultSet.getString("species");
             String birthdate = resultSet.getString("birthdate");
             double adoptionPrice = resultSet.getDouble("adoptionPrice");
             String traits = resultSet.getString("traits");
-            int owner = resultSet.getInt("owner");
+            int ownerID = resultSet.getInt("ownerID");
                          
-            Animals animals = new Animals( id, name, species, birthdate, adoptionPrice, traits, owner);
+            Animals animals = new Animals(animalID, name, species, birthdate, adoptionPrice, traits, ownerID);
 
             listAnimals.add(animals);
         }        
@@ -269,15 +261,15 @@ public class PeopleDAO extends HttpServlet {
         ResultSet resultSet = statement.executeQuery(sql);
          
         while (resultSet.next()) {
-            int id = resultSet.getInt("id");
+            int animalID = resultSet.getInt("animalID");
             String name = resultSet.getString("name");
             String species = resultSet.getString("species");
             String birthdate = resultSet.getString("birthdate");
             double adoptionPrice = resultSet.getDouble("adoptionPrice");
             String traits = resultSet.getString("traits");
-            int owner = resultSet.getInt("owner");
+            int ownerID = resultSet.getInt("ownerID");
                          
-            Animals animals = new Animals( id, name, species, birthdate, adoptionPrice, traits, owner);
+            Animals animals = new Animals( animalID, name, species, birthdate, adoptionPrice, traits, ownerID);
 
             listAnimals.add(animals);
         }        
@@ -288,12 +280,12 @@ public class PeopleDAO extends HttpServlet {
         return listAnimals;
     }
     
-    public List<Animals> searchByUser(int userID) throws SQLException {
+    public List<Animals> searchByOwner(int ownerID) throws SQLException {
         List<Animals> listAnimals = new ArrayList<Animals>();  
         connect_func();  
-        String sql = "SELECT * FROM animals WHERE owner = ?";       
+        String sql = "SELECT * FROM animals WHERE ownerID = ?";       
         preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-        preparedStatement.setInt(1, userID);
+        preparedStatement.setInt(1, ownerID);
 
         ResultSet resultSet = preparedStatement.executeQuery();
          
@@ -303,9 +295,8 @@ public class PeopleDAO extends HttpServlet {
             String birthdate = resultSet.getString("birthdate");
             double adoptionPrice = resultSet.getDouble("adoptionPrice");
             String traits = resultSet.getString("traits");
-            int owner = resultSet.getInt("owner");
                          
-            Animals animals = new Animals(userID, name, species, birthdate, adoptionPrice, traits, owner);
+            Animals animals = new Animals(name, species, birthdate, adoptionPrice, traits, ownerID);
 
             listAnimals.add(animals);
         }        
@@ -314,17 +305,16 @@ public class PeopleDAO extends HttpServlet {
         return listAnimals;
     }
 
-    
     public boolean insertAnimal(Animals animals) throws SQLException {
     	connect_func();         
-		String sql = "insert into  animals(name, species, birthdate, adoptionPrice, traits, owner) values (?, ?, ?, ?, ?, ?)";
+		String sql = "insert into  animals(name, species, birthdate, adoptionPrice, traits, ownerID) values (?, ?, ?, ?, ?, ?)";
 		preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
 		preparedStatement.setString(1, animals.name);
 		preparedStatement.setString(2, animals.species);
 		preparedStatement.setString(3, animals.birthdate);
 		preparedStatement.setDouble(4, animals.adoptionPrice);
 		preparedStatement.setString(5, animals.traits);
-		preparedStatement.setInt(6, animals.owner);
+		preparedStatement.setInt(6, animals.ownerID);
 //		preparedStatement.executeUpdate();
 		
         boolean rowInserted = preparedStatement.executeUpdate() > 0;
@@ -333,12 +323,12 @@ public class PeopleDAO extends HttpServlet {
         return rowInserted;
     }     
      
-    public boolean deleteAnimal(int animalId) throws SQLException {
-        String sql = "DELETE FROM animals WHERE id = ?";        
+    public boolean deleteAnimal(int animalID) throws SQLException {
+        String sql = "DELETE FROM animals WHERE animalID = ?";        
         connect_func();
          
         preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-        preparedStatement.setInt(1, animalId);
+        preparedStatement.setInt(1, animalID);
          
         boolean rowDeleted = preparedStatement.executeUpdate() > 0;
         preparedStatement.close();
@@ -356,26 +346,23 @@ public class PeopleDAO extends HttpServlet {
         preparedStatement.setString(3, animals.birthdate);
         preparedStatement.setDouble(4, animals.adoptionPrice);
         preparedStatement.setString(5, animals.traits);
-        preparedStatement.setInt(6, animals.owner);
-        preparedStatement.setInt(7, animals.id);
+        preparedStatement.setInt(6, animals.ownerID);
+        preparedStatement.setInt(7, animals.animalID);
    
         boolean rowUpdated = preparedStatement.executeUpdate() > 0;
         preparedStatement.close();
 //        disconnect();
         return rowUpdated;     
     }
-	/**
-	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
-	 */
 	
-    public Animals getAnimals(int id) throws SQLException {
+    public Animals getAnimals(int animalID) throws SQLException {
     	Animals animals = null;
-        String sql = "SELECT * FROM animals WHERE id = ?";
+        String sql = "SELECT * FROM animals WHERE animalID = ?";
          
         connect_func();
          
         preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-        preparedStatement.setInt(1, id);
+        preparedStatement.setInt(1, animalID);
          
         ResultSet resultSet = preparedStatement.executeQuery();
          
@@ -385,9 +372,9 @@ public class PeopleDAO extends HttpServlet {
             String birthdate = resultSet.getString("birthdate");
             double adoptionPrice = resultSet.getDouble("adoptionPrice");
             String traits = resultSet.getString("traits");
-            int owner = resultSet.getInt("owner");
+            int ownerID = resultSet.getInt("owner");
              
-            animals = new Animals( id, name, species, birthdate, adoptionPrice, traits, owner);
+            animals = new Animals( animalID, name, species, birthdate, adoptionPrice, traits, ownerID);
             System.out.println(animals);
         }
          

@@ -15,12 +15,15 @@
             <a href="listPeople">List All People</a>
             	&nbsp;&nbsp;&nbsp;
             <a href="initDB">Initialize DB</a>
+             &nbsp;&nbsp;&nbsp;
+            <a href="welcome">Home</a>
         </h2>
     </center>
     <div align="center">
         <table border="1" cellpadding="5">
             <caption><h2>List of People</h2></caption>
             <tr>
+            	<th>User ID</th>
                 <th>User Name</th>
                 <th>User Password</th>
                 <th>First Name</th>
@@ -30,14 +33,17 @@
             </tr>
             <c:forEach items="${listPeople}" var="people">
                 <tr>
+                    <td><c:out value="${people.getId()}" /></td>
                     <td><c:out value="${people.getUserName()}" /></td>
                     <td><c:out value="${people.getUserPassword()}" /></td>
                     <td><c:out value="${people.getFirstName()}" /></td>
                     <td><c:out value="${people.getLastName()}" /></td>
                     <td><c:out value="${people.getEmailAddress()}" /></td>
-                    <td>    <a href="editUser?id=<c:out value='${people.getId()}' />">Edit</a>
-                        &nbsp;&nbsp;&nbsp;&nbsp;
-                        <a href="deleteUser?id=<c:out value='${people.getId()}' />">Delete</a></td>               
+                    <td> 
+                        <a href="editUser?id=<c:out value='${people.getId()}' />">Edit</a>
+                     		&nbsp;&nbsp;&nbsp;&nbsp;
+                    	<a href="deleteUser?id=<c:out value='${people.getId()}' />">Delete</a>
+                    </td>               
                 </tr>
             </c:forEach>
         </table>
