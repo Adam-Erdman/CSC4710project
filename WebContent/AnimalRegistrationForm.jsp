@@ -6,17 +6,13 @@
     <title>Animal Registration</title>
 </head>
 <body>
-    <center>
+   <div align="center">
         <h1>Add Animal to Adoption Registry</h1>
         <h2>
         	<a href="AnimalListFormDropDown">Search Animals</a>
             &nbsp;&nbsp;&nbsp;
             <a href="welcome">Home</a>
-            &nbsp;&nbsp;&nbsp;
-            
-        </h2>
-    </center>
-    <div align="center">
+        </h2>    
         <c:if test="${animals != null}">
             <form action="updateAnimal" method="post">
         </c:if>

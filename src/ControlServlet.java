@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
  
 import javax.servlet.RequestDispatcher;
@@ -38,7 +39,7 @@ public class ControlServlet extends HttpServlet {
             throws ServletException, IOException {
         doGet(request, response);
     }
- 
+         
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         String action = request.getServletPath();
@@ -97,7 +98,7 @@ public class ControlServlet extends HttpServlet {
             	searchByTrait(request, response);
                 break;
             case "/myAnimals":
-            	searchByOwner(request,response);
+            	myAnimals(request,response);
             	break;
             default:   	
             	pageNotFound(request,response);
@@ -113,7 +114,7 @@ public class ControlServlet extends HttpServlet {
     	String urlInfo = request.getServletPath();
     	request.setAttribute("urlInfo", urlInfo);
     	RequestDispatcher dispatcher = request.getRequestDispatcher("pageNotFound.jsp");
-        dispatcher.forward(request, response);
+    	dispatcher.forward(request, response);
 	}
 
 	private void initDB(HttpServletRequest request, HttpServletResponse response) 
@@ -157,8 +158,19 @@ public class ControlServlet extends HttpServlet {
     		peopleDAO.insertAnimal(animal);
     	}
     	
-        response.sendRedirect("welcome");		
+        response.sendRedirect("welcome.jsp");		
 	}
+	
+	private boolean authenticate(HttpServletRequest request, HttpServletResponse response) 
+    		throws IOException, ServletException{
+		session = request.getSession();
+		if(session != null && session.getAttribute("userID") != null) {
+			return true;
+		}else
+			response.sendRedirect("login.jsp");
+			return false;
+	}
+		
 	 
 	private void login(HttpServletRequest request, HttpServletResponse response) 
     		throws SQLException, IOException, ServletException{
@@ -179,7 +191,9 @@ public class ControlServlet extends HttpServlet {
 	    	 System.out.println("login successful");
 	     }
 	     else {
-	    	 response.sendRedirect("login.jsp");
+	    	 request.setAttribute("failedLogin", true);
+	         RequestDispatcher dispatcher = request.getRequestDispatcher("login.jsp");
+	         dispatcher.forward(request, response);
 	     }	     
 	}
 	
@@ -192,18 +206,12 @@ public class ControlServlet extends HttpServlet {
 	}
 	
 	private void welcomeForm(HttpServletRequest request, HttpServletResponse response)
-			throws ServletException, IOException {
+			throws SQLException, ServletException, IOException {
 		session = request.getSession();
-		if (session != null && session.getAttribute("userID") != null) {  	    	 
-	    	 response.sendRedirect("welcome.jsp");
-	    	 System.out.println("logged in with " + session.getAttribute("userName"));
-	 		 ServletOutputStream out = response.getOutputStream();
-			 out.print("test");
-			 out.close();
-	     }
-	     else {
-	    	 response.sendRedirect("login.jsp");
-	     }	 
+		if(authenticate(request,response)) {
+			response.sendRedirect("welcome.jsp");
+	    	System.out.println("logged in with " + session.getAttribute("userName"));
+		}
 	}
 
 	private void listPeople(HttpServletRequest request, HttpServletResponse response)
@@ -270,81 +278,105 @@ public class ControlServlet extends HttpServlet {
  ///////////////////////part 2/////////////////////////
     
     private void deleteAnimal(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-        int animalID = Integer.parseInt(request.getParameter("animalID"));
-        //People people = new People(id);
-        peopleDAO.deleteAnimal(animalID);
-        response.sendRedirect("list"); 
+            throws SQLException, IOException, ServletException {
+    	if(authenticate(request, response)) {
+	        int animalID = Integer.parseInt(request.getParameter("animalID"));
+	        //People people = new People(id);
+	        peopleDAO.deleteAnimal(animalID);
+	        response.sendRedirect("list"); 
+    	}
     }
+    
 	 private void animalRegistrationForm(HttpServletRequest request, HttpServletResponse response)
-	        throws ServletException, IOException {
-        RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalRegistrationForm.jsp");
-        dispatcher.forward(request, response);
+	        throws ServletException, IOException, ServletException {
+		 if(authenticate(request, response)) {
+			 RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalRegistrationForm.jsp");
+			 dispatcher.forward(request, response);
+		}
 	}
 
     private void insertAnimal(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-        String name = request.getParameter("name");
-        String species = request.getParameter("species");
-        String birthdate = request.getParameter("birthdate");
-        Double adoptionPrice = Double.parseDouble(request.getParameter("adoptionPrice"));
-        String traits = request.getParameter("traits");
-        Integer ownerID = Integer.parseInt(request.getParameter("ownerID"));
-        
-        Animals newAnimals = new Animals(name, species, birthdate, adoptionPrice, traits, ownerID);
-        peopleDAO.insertAnimal(newAnimals);
-        response.sendRedirect("AnimalList");
+            throws SQLException, IOException, ServletException {
+    	if(authenticate(request, response)) {
+	        String name = request.getParameter("name");
+	        String species = request.getParameter("species");
+	        String birthdate = request.getParameter("birthdate");
+	        Double adoptionPrice = Double.parseDouble(request.getParameter("adoptionPrice"));
+	        String traits = request.getParameter("traits");
+	        int ownerID =  (Integer) (session.getAttribute("userID"));
+	        
+	        Animals newAnimals = new Animals(name, species, birthdate, adoptionPrice, traits, ownerID);
+	        peopleDAO.insertAnimal(newAnimals);
+	        response.sendRedirect("AnimalList");
+    	}
     }
  
     private void updateAnimal(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
-    	
-        int animalID = Integer.parseInt(request.getParameter("animalID"));
-        String name = request.getParameter("name");
-        String species = request.getParameter("species");
-        String birthdate = request.getParameter("birthdate");
-        Double adoptionPrice = Double.parseDouble(request.getParameter("adoptionPrice"));
-        String traits = request.getParameter("traits");
-        int ownerID = Integer.parseInt(request.getParameter("ownerID"));
-        
-        System.out.println(name);
-        
-        Animals animals = new Animals(animalID, name, species, birthdate, adoptionPrice, traits, ownerID);
-        peopleDAO.updateAnimal(animals);
-        response.sendRedirect("list");
+            throws SQLException, IOException, ServletException {
+    	if(authenticate(request, response)) {
+	        int animalID = Integer.parseInt(request.getParameter("animalID"));
+	        String name = request.getParameter("name");
+	        String species = request.getParameter("species");
+	        String birthdate = request.getParameter("birthdate");
+	        Double adoptionPrice = Double.parseDouble(request.getParameter("adoptionPrice"));
+	        String traits = request.getParameter("traits");
+	        int ownerID = Integer.parseInt(request.getParameter("ownerID"));
+	        
+	        System.out.println(name);
+	        
+	        Animals animals = new Animals(animalID, name, species, birthdate, adoptionPrice, traits, ownerID);
+	        peopleDAO.updateAnimal(animals);
+	        response.sendRedirect("myAnimals");
+    	}
     }
    
     private void animalListForm(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        List<Animals> animalListForm = peopleDAO.listAllAnimals();
-        request.setAttribute("animalListForm", animalListForm);       
-        RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalList.jsp");       
-        dispatcher.forward(request, response);
+    	if(authenticate(request, response)) {
+	        List<Animals> animalListForm = peopleDAO.listAllAnimals();
+	        List<String> ownerFullname = new ArrayList<String>();
+	        
+	        for (Animals animal : animalListForm) {
+	        	int id = animal.getOwner();
+				String fullName = peopleDAO.getUserFullName(id);
+				ownerFullname.add(fullName);
+			}
+	        
+	        request.setAttribute("animalListForm", animalListForm);       
+	        request.setAttribute("ownerFullName", ownerFullname);
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalList.jsp");       
+	        dispatcher.forward(request, response);
+    	}
     }
     
     private void animalListFormDropDown(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        List<Animals> animalListFormDropDown = peopleDAO.listAllAnimals();
-        request.setAttribute("animalListFormDropDown", animalListFormDropDown);       
-        RequestDispatcher dispatcher = request.getRequestDispatcher("AdoptionSearchForm.jsp");       
-        dispatcher.forward(request, response);
+    	if(authenticate(request, response)) {
+	        List<Animals> animalListFormDropDown = peopleDAO.listAllAnimals();
+	        request.setAttribute("animalListFormDropDown", animalListFormDropDown);       
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("AdoptionSearchForm.jsp");       
+	        dispatcher.forward(request, response);
+    	}
     }
     
     private void searchByTrait(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        List<Animals> searchByTrait = peopleDAO.listByTrait();
-        request.setAttribute("searchByTrait", searchByTrait);       
-        RequestDispatcher dispatcher = request.getRequestDispatcher("SearchByTraitList.jsp");       
-        dispatcher.forward(request, response);
+    	if(authenticate(request, response)) {
+	        List<Animals> searchByTrait = peopleDAO.listByTrait();
+	        request.setAttribute("searchByTrait", searchByTrait);       
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("SearchByTraitList.jsp");       
+	        dispatcher.forward(request, response);
+    	}
     }
     
-    private void searchByOwner(HttpServletRequest request, HttpServletResponse response)
+    private void myAnimals(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        int userID =  (Integer) (session.getAttribute("userID"));
-        List<Animals> animals = peopleDAO.searchByOwner(userID);
-        
-        request.setAttribute("animals", animals);       
-        RequestDispatcher dispatcher = request.getRequestDispatcher("myAnimals.jsp");       
-        dispatcher.forward(request, response);
+    	if(authenticate(request, response)) {
+	        int userID =  (Integer) (session.getAttribute("userID"));
+	        List<Animals> animals = peopleDAO.searchByOwner(userID);
+	        request.setAttribute("animals", animals);       
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("myAnimals.jsp");       
+	        dispatcher.forward(request, response);
+    	}
     }
 }

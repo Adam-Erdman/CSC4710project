@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
   <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %> 
+  <%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>  
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -25,13 +26,13 @@
                 <th>Species</th>
                 <th>Owner</th>
                 <th>Adoption Price</th>
-            </tr>
-            <c:forEach items="${animalListForm}" var="animals">
+            </tr>           
+            <c:forEach begin="0" end="${fn:length(animalListForm) - 1}" var="i">
                 <tr>
-                    <td><c:out value="${animals.getName()}" /></td>
-                    <td><c:out value="${animals.getSpecies()}" /></td>
-                    <td><c:out value="${animals.getOwner()}" /></td>                              
-                    <td><c:out value="${animals.getAdoptionPrice()}" /></td>
+                    <td><c:out value="${animalListForm[i].getName()}" /></td>
+                    <td><c:out value="${animalListForm[i].getSpecies()}" /></td>
+                    <td><c:out value="${ownerFullName[i]}" /></td>                              
+                    <td>$<c:out value="${animalListForm[i].getAdoptionPrice()}"/></td>
                 </tr>
             </c:forEach>
         </table>

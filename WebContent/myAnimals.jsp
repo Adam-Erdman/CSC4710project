@@ -15,24 +15,22 @@
             <a href="AnimalList">All animals</a>
             &nbsp;&nbsp;&nbsp;
             <a href="welcome">Home</a>
-            &nbsp;&nbsp;&nbsp;
         </h2>
     </center>
     <div align="center">
         <table border="1" cellpadding="5">
-            <caption><h2>List of Pets</h2></caption>
+            <caption><h2>My Pets</h2></caption>
             <tr>
                 <th>Pet Name</th>
                 <th>Species</th>
-                <th>Owner</th>
                 <th>Adoption Price</th>
+				 <th>Reviews</th>
             </tr>
             <c:forEach items="${animals}" var="animals">
                 <tr>
                     <td><c:out value="${animals.getName()}" /></td>
                     <td><c:out value="${animals.getSpecies()}" /></td>
-                    <td><c:out value="${animals.getOwner()}" /></td>                              
-                    <td><c:out value="${animals.getAdoptionPrice()}" /></td>
+                    <td>$<c:out value="${animals.getAdoptionPrice()}" /></td>
                 </tr>
             </c:forEach>
         </table>

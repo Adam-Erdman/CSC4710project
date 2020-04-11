@@ -46,33 +46,7 @@ public class PeopleDAO extends HttpServlet {
             System.out.println(connect);
         }
     }
-    
-    public List<People> listAllPeople() throws SQLException {
-        List<People> listPeople = new ArrayList<People>();        
-        String sql = "SELECT * FROM users";      
-        connect_func();      
-        statement =  (Statement) connect.createStatement();
-        ResultSet resultSet = statement.executeQuery(sql);
-         
-        while (resultSet.next()) {
-            int id = resultSet.getInt("id");
-            String username = resultSet.getString("username");
-            String userpassword = resultSet.getString("userpassword");
-            String firstname = resultSet.getString("firstname");
-            String lastname = resultSet.getString("lastname");
-            String emailaddress = resultSet.getString("emailaddress");
-                         
-            People people = new People( id, username, userpassword, firstname, lastname, emailaddress);
-
-            listPeople.add(people);
-        }        
         
-        resultSet.close();
-        statement.close();         
-        disconnect();        
-        return listPeople;
-    }
-    
     protected void disconnect() throws SQLException {
         if (connect != null && !connect.isClosed()) {
         	connect.close();
@@ -131,34 +105,8 @@ public class PeopleDAO extends HttpServlet {
 //        disconnect();
         return rowUpdated;     
     }
-
-    public People getUser(int id) throws SQLException {
-    	People people = null;
-        String sql = "SELECT * FROM users WHERE id = ?";
-         
-        connect_func();
-         
-        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-        preparedStatement.setInt(1, id);
-         
-        ResultSet resultSet = preparedStatement.executeQuery();
-         
-        if (resultSet.next()) {
-        	String firstname = resultSet.getString("firstname");
-            String lastname = resultSet.getString("lastname");
-            String emailaddress = resultSet.getString("emailaddress");
-            String userpassword = resultSet.getString("userpassword");
-            String username = resultSet.getString("username");
-             
-            people = new People( id, username, userpassword, firstname, lastname, emailaddress);
-        }
-        
-        resultSet.close();
-         
-        return people;
-    }
-
-	public void wipe() throws SQLException{
+    
+    public void wipe() throws SQLException{
 		connect_func();
 		
 		String deleteUserTable = "DROP TABLE IF EXISTS users";
@@ -189,21 +137,34 @@ public class PeopleDAO extends HttpServlet {
 	    statement.executeUpdate(createAnimalTable); //added for part 2 -ae
 	    
 	    statement.close();
-	}
-	
-	public Boolean findUser(String username, String userpassword) throws SQLException{
-		
-		connect_func();
-        String sql = "SELECT * FROM users WHERE username = ? AND userpassword = ?";
-                  
+	}	
+
+    public People getUser(int id) throws SQLException {
+    	People people = null;
+        String sql = "SELECT * FROM users WHERE id = ?";
+         
+        connect_func();
+         
         preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-        preparedStatement.setString(1, username);
-        preparedStatement.setString(2, userpassword);
+        preparedStatement.setInt(1, id);
          
         ResultSet resultSet = preparedStatement.executeQuery();
+         
+        if (resultSet.next()) {
+        	String firstname = resultSet.getString("firstname");
+            String lastname = resultSet.getString("lastname");
+            String emailaddress = resultSet.getString("emailaddress");
+            String userpassword = resultSet.getString("userpassword");
+            String username = resultSet.getString("username");
+             
+            people = new People( id, username, userpassword, firstname, lastname, emailaddress);
+        }
         
-        return resultSet.next();
-	}
+        resultSet.close();
+         
+        return people;
+    }
+    
 	
 	public int getUserId(String username, String password) throws SQLException{
 		connect_func();
@@ -222,9 +183,66 @@ public class PeopleDAO extends HttpServlet {
         
         return -1;
 	}
+	
+	public String getUserFullName(int id) throws SQLException {
+		connect_func();
+        String userFullName = null;      
+        String sql = "SELECT firstname, lastname FROM users WHERE id = ?";      
 
-	
-	
+        preparedStatement =  (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setInt(1, id);
+        ResultSet resultSet = preparedStatement.executeQuery();
+         
+        while (resultSet.next()) {
+            String firstname = resultSet.getString("firstname");
+            String lastname = resultSet.getString("lastname");
+            userFullName = firstname + " " + lastname;
+        }        
+        
+        resultSet.close();
+        statement.close();         
+        return userFullName;
+    }
+
+    
+	public Boolean findUser(String username, String userpassword) throws SQLException{
+		
+		connect_func();
+        String sql = "SELECT * FROM users WHERE username = ? AND userpassword = ?";
+                  
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, username);
+        preparedStatement.setString(2, userpassword);
+         
+        ResultSet resultSet = preparedStatement.executeQuery();
+        
+        return resultSet.next();
+	}
+
+	 public List<People> listAllPeople() throws SQLException {
+	        List<People> listPeople = new ArrayList<People>();        
+	        String sql = "SELECT * FROM users";      
+	        connect_func();      
+	        statement =  (Statement) connect.createStatement();
+	        ResultSet resultSet = statement.executeQuery(sql);
+	         
+	        while (resultSet.next()) {
+	            int id = resultSet.getInt("id");
+	            String username = resultSet.getString("username");
+	            String userpassword = resultSet.getString("userpassword");
+	            String firstname = resultSet.getString("firstname");
+	            String lastname = resultSet.getString("lastname");
+	            String emailaddress = resultSet.getString("emailaddress");
+	                         
+	            People people = new People( id, username, userpassword, firstname, lastname, emailaddress);
+
+	            listPeople.add(people);
+	        }        
+	        
+	        resultSet.close();      
+	        return listPeople;
+	    }
+		
 	///////////////////////////////// Begin Animal Registration Form //////////////////////////////////// -ae
     public List<Animals> listAllAnimals() throws SQLException {
         List<Animals> listAnimals = new ArrayList<Animals>();        

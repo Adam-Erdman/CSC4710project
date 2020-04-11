@@ -12,6 +12,5 @@
                 The page <c:out value="${urlInfo}"/> was not found
      		</h2>
     </center>
-    
 </body>
 </html>

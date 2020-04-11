@@ -32,6 +32,9 @@
             </tr>
         </table>
         </form>
+        <c:if test="${failedLogin}">
+        	<h3>Failed Login! Incorrect username or password.</h3>
+        </c:if>
         New user? Click <a href="newUser">here</a> to sign up.
     </div>   
 </body>
