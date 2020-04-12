@@ -1,4 +1,5 @@
-
+import java.util.ArrayList;
+import java.util.List;
 
 public class Animals {
 	protected int animalID;
@@ -8,9 +9,22 @@ public class Animals {
     protected double adoptionPrice;
     protected String traits; //how do we want to implement this? Array of strings?? -AE
     protected int ownerID;
- 
+    
+    public List<Review> review = new ArrayList<Review>();
+    
+    public int getReviewSize() {
+    	return review.size();
+    }
+    
+    public String getReviewersName(int index) {
+    	return review.get(index).getReviewersName();
+    }
+    
+    public int getReviewID(int index) {
+    	return review.get(index).getReviewID();
+    }
+    
     public Animals() {
-    	
     }
     
     public Animals(int id) {
@@ -38,7 +52,7 @@ public class Animals {
  
     @Override
 	public String toString() {
-		return "People [=" + animalID + ", name=" + name + ", species=" + species + ", birthdate="
+		return "Animal [=" + animalID + ", name=" + name + ", species=" + species + ", birthdate="
 				+ birthdate + ", adoption price=" + adoptionPrice + ", traits=" + traits + "]";
 	}
     
@@ -92,7 +106,5 @@ public class Animals {
     
     public void setOwner(int ownerID) {
     	this.ownerID = ownerID; 
-    }
-    
-   
+    }   
 }

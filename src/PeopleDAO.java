@@ -111,30 +111,59 @@ public class PeopleDAO extends HttpServlet {
 		
 		String deleteUserTable = "DROP TABLE IF EXISTS users";
 		String createUserTable = "CREATE TABLE IF NOT EXISTS users " +
-			"(id INTEGER not NULL AUTO_INCREMENT, " +
-			" username VARCHAR(50) NOT NULL, " + 
-			" userpassword VARCHAR(50) NOT NULL, " + 
-			" firstname VARCHAR(50) NOT NULL, " + 
-			" lastname VARCHAR(50) NOT NULL, " + 
-			" emailaddress varchar(50) not NULL," +
-			" PRIMARY KEY ( id ))"; 
+				"	(id INTEGER not NULL AUTO_INCREMENT, " +
+				"	username VARCHAR(50) NOT NULL, " + 
+				" 	userpassword VARCHAR(50) NOT NULL, " + 
+				" 	firstname VARCHAR(50) NOT NULL, " + 
+				" 	lastname VARCHAR(50) NOT NULL, " + 
+				" 	emailaddress varchar(50) not NULL," +
+				"	PRIMARY KEY ( id ))"; 
+		
 		String deleteAnimalTable ="DROP TABLE IF EXISTS animals"; //added for part 2 -ae
 		String createAnimalTable ="CREATE TABLE IF NOT EXISTS animals " +
-				"(animalID INTEGER not NULL AUTO_INCREMENT, " +
-				" name VARCHAR(50) NOT NULL, " + 
-				" species VARCHAR(50) NOT NULL, " + 
-				" birthdate VARCHAR(50) NOT NULL, " + 
-				" adoptionPrice FLOAT(50) NOT NULL, " + 
-				" traits VARCHAR(150) not NULL," +
-				" ownerID INTEGER not NULL," +
-				" FOREIGN KEY (ownerID) REFERENCES users(id),\r\n" + 
-				" PRIMARY KEY ( animalID ))"; 
+				"	(animalID INTEGER not NULL AUTO_INCREMENT, " +
+				" 	name VARCHAR(50) NOT NULL, " + 
+				" 	species VARCHAR(50) NOT NULL, " + 
+				" 	birthdate VARCHAR(50) NOT NULL, " + 
+				" 	adoptionPrice FLOAT(50) NOT NULL, " + 
+				" 	traits VARCHAR(150) not NULL," +
+				" 	ownerID INTEGER not NULL," +
+				" 	PRIMARY KEY (animalID)," + 
+				" 	FOREIGN KEY (ownerID) REFERENCES users(id)" + 
+				" 	ON DELETE CASCADE)";
+		
+		String deleteReviewTable = "DROP TABLE IF EXISTS reviews";
+		String createReviewTable = "CREATE TABLE IF NOT EXISTS reviews" + 
+				"    (reviewID int not NULL AUTO_INCREMENT," + 
+				"    review VARCHAR(500) NOT NULL," + 
+				"    reviewScore int not NULL," + 
+				"    animalID int not NULL," + 
+				"    ownerID int not NULL," + 
+				"    PRIMARY KEY (ReviewID)," + 
+				"    FOREIGN KEY (animalID) REFERENCES animals(animalID)," + 
+				"    FOREIGN KEY (ownerID) REFERENCES animals(ownerID)" + 
+				"    ON DELETE CASCADE)";
+		
+		//Makes sure there are less than 5 reviews per user
+		String reviewTrigger =
+				"CREATE TRIGGER lt5Reviews BEFORE INSERT on reviews" + 
+				"	FOR EACH ROW BEGIN" + 
+				"    SET @reviewCount = 0;" + 
+				"	select count(*) INTO @reviewCount from reviews where ownerID = NEW.ownerID;" + 
+				"    IF @reviewCount >= 5 THEN" + 
+				"		 SIGNAL SQLSTATE '45000'" + 
+				"		   SET MESSAGE_TEXT = 'Cannot insert more than 5 reivews', MYSQL_ERRNO = 1000;" + 
+				"	END IF;" + 
+				"END";
 	
 		statement = connect.createStatement();
+		statement.executeUpdate(deleteReviewTable);
 	    statement.executeUpdate(deleteAnimalTable); //added for part 2 -ae
 	    statement.executeUpdate(deleteUserTable);
 	    statement.executeUpdate(createUserTable);
 	    statement.executeUpdate(createAnimalTable); //added for part 2 -ae
+	    statement.executeUpdate(createReviewTable);
+	    statement.executeUpdate(reviewTrigger);
 	    
 	    statement.close();
 	}	
@@ -200,7 +229,6 @@ public class PeopleDAO extends HttpServlet {
         }        
         
         resultSet.close();
-        statement.close();         
         return userFullName;
     }
 
@@ -273,7 +301,7 @@ public class PeopleDAO extends HttpServlet {
     
     public List<Animals> listByTrait() throws SQLException {
         List<Animals> listAnimals = new ArrayList<Animals>();        
-        String sql = "SELECT * FROM animals WHERE traits = ${param.animals}";      
+        String sql = "SELECT * FROM animals WHERE traits = ${animals}";      
         connect_func();      
         statement =  (Statement) connect.createStatement();
         ResultSet resultSet = statement.executeQuery(sql);
@@ -308,13 +336,13 @@ public class PeopleDAO extends HttpServlet {
         ResultSet resultSet = preparedStatement.executeQuery();
          
         while (resultSet.next()) {
+        	int animalID = resultSet.getInt("animalID");
             String name = resultSet.getString("name");
             String species = resultSet.getString("species");
             String birthdate = resultSet.getString("birthdate");
             double adoptionPrice = resultSet.getDouble("adoptionPrice");
             String traits = resultSet.getString("traits");
-                         
-            Animals animals = new Animals(name, species, birthdate, adoptionPrice, traits, ownerID);
+            Animals animals = new Animals(animalID, name, species, birthdate, adoptionPrice, traits, ownerID);
 
             listAnimals.add(animals);
         }        
@@ -373,7 +401,7 @@ public class PeopleDAO extends HttpServlet {
         return rowUpdated;     
     }
 	
-    public Animals getAnimals(int animalID) throws SQLException {
+    public Animals getAnimal(int animalID) throws SQLException {
     	Animals animals = null;
         String sql = "SELECT * FROM animals WHERE animalID = ?";
          
@@ -390,15 +418,78 @@ public class PeopleDAO extends HttpServlet {
             String birthdate = resultSet.getString("birthdate");
             double adoptionPrice = resultSet.getDouble("adoptionPrice");
             String traits = resultSet.getString("traits");
-            int ownerID = resultSet.getInt("owner");
+            int ownerID = resultSet.getInt("ownerID");
              
-            animals = new Animals( animalID, name, species, birthdate, adoptionPrice, traits, ownerID);
-            System.out.println(animals);
+            animals = new Animals(animalID, name, species, birthdate, adoptionPrice, traits, ownerID);
         }
          
         resultSet.close();
-        statement.close();
-         
+        preparedStatement.close();
         return animals;
+    }
+       
+	public boolean insertReview(Review review) throws SQLException {
+		connect_func();         
+		String sql = "insert into reviews(review, reviewScore, animalID, ownerID) values (?, ?, ?, ?)";
+		preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+		preparedStatement.setString(1, review.review);
+		preparedStatement.setInt(2, review.reviewScore);
+		preparedStatement.setInt(3, review.animalID);
+		preparedStatement.setInt(4, review.ownerID);	//	preparedStatement.executeUpdate();
+		
+	   boolean rowInserted = preparedStatement.executeUpdate() > 0;
+	   preparedStatement.close();
+	   return rowInserted;
+	}     
+	
+    public List<Review> getReviews(int animalID) throws SQLException {
+        List<Review> reviews = new ArrayList<Review>();  
+
+        String sql = "SELECT * FROM reviews WHERE animalID = ?";
+         
+        connect_func();
+         
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setInt(1, animalID);
+        
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+        	int reviewID = resultSet.getInt("reviewID");
+            String reviewText = resultSet.getString("review");
+            int reviewScore = resultSet.getInt("reviewScore");
+            int ownerID = resultSet.getInt("ownerID");
+            String fullName = getUserFullName(ownerID);    
+            
+            Review review = new Review(reviewID,  reviewText,  reviewScore,  animalID,  ownerID, fullName);
+            reviews.add(review);
+        }        
+         
+        resultSet.close();
+        preparedStatement.close();
+        return reviews;
+    }
+    
+    public Review getReview(int reviewID) throws SQLException {
+        String sql = "SELECT * FROM reviews WHERE reviewID = ?";
+        Review review = null;
+        connect_func();
+         
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setInt(1, reviewID);
+        
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+            String reviewText = resultSet.getString("review");
+            int reviewScore = resultSet.getInt("reviewScore");
+        	int animalID = resultSet.getInt("animalID");
+            int ownerID = resultSet.getInt("ownerID");
+            String fullName = getUserFullName(ownerID);    
+            
+            review = new Review(reviewID,  reviewText,  reviewScore,  animalID,  ownerID, fullName);
+        }        
+         
+        resultSet.close();
+        preparedStatement.close();
+        return review;
     }
 }

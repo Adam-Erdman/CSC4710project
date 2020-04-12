@@ -9,10 +9,10 @@
     <div align="center">
         <h1>Welcome ${userName}!</h1>
            <h2>
+           <a href="myAnimals">My animals</a>
+            &nbsp;&nbsp;&nbsp;	
             <a href="AnimalList">All animals</a>
             &nbsp;&nbsp;&nbsp;
-            <a href="myAnimals">My animals</a>
-            &nbsp;&nbsp;&nbsp;	
             <a href="AnimalListFormDropDown">Search Animals</a>
             &nbsp;&nbsp;&nbsp;
              <a href="AnimalRegistrationForm">Animal Registration</a>

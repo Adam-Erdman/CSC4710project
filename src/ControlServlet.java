@@ -4,7 +4,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
- 
+import java.util.concurrent.ThreadLocalRandom;
+
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -100,6 +101,15 @@ public class ControlServlet extends HttpServlet {
             case "/myAnimals":
             	myAnimals(request,response);
             	break;
+            case "/createReview":
+            	createReview(request,response);
+            	break;
+            case "/insertReview":
+            	insertReview(request,response);
+            	break;
+            case "/showReview":
+            	showReview(request,response);
+            	break;
             default:   	
             	pageNotFound(request,response);
             	break;
@@ -108,8 +118,8 @@ public class ControlServlet extends HttpServlet {
             throw new ServletException(ex);
         }
     }
-    
-    private void pageNotFound(HttpServletRequest request, HttpServletResponse response) 
+
+	private void pageNotFound(HttpServletRequest request, HttpServletResponse response) 
     		throws ServletException, IOException {
     	String urlInfo = request.getServletPath();
     	request.setAttribute("urlInfo", urlInfo);
@@ -158,6 +168,15 @@ public class ControlServlet extends HttpServlet {
     		peopleDAO.insertAnimal(animal);
     	}
     	
+    	//Create reviews
+     	for(int i = 1; i < 15; i++) {
+    		String reviewText = "Review...Text place holder" + i;
+    		int reviewScore = ThreadLocalRandom.current().nextInt(1, 4 + 1);
+    		int animalID = i;
+    		int ownerID = i%14 + 1;
+    		Review review= new Review(reviewText, reviewScore, animalID, ownerID);
+    		peopleDAO.insertReview(review);
+    	}
         response.sendRedirect("welcome.jsp");		
 	}
 	
@@ -247,7 +266,7 @@ public class ControlServlet extends HttpServlet {
         
         People newPeople = new People(username, userpassword, firstname, lastname, emailaddress);
         peopleDAO.insert(newPeople);
-        response.sendRedirect("login.jsp");
+        response.sendRedirect("welcome.jsp");
     }
  
     private void updatePeople(HttpServletRequest request, HttpServletResponse response)
@@ -336,6 +355,7 @@ public class ControlServlet extends HttpServlet {
 	        List<Animals> animalListForm = peopleDAO.listAllAnimals();
 	        List<String> ownerFullname = new ArrayList<String>();
 	        
+	        //Display owner first and last name (fullname)
 	        for (Animals animal : animalListForm) {
 	        	int id = animal.getOwner();
 				String fullName = peopleDAO.getUserFullName(id);
@@ -374,9 +394,65 @@ public class ControlServlet extends HttpServlet {
     	if(authenticate(request, response)) {
 	        int userID =  (Integer) (session.getAttribute("userID"));
 	        List<Animals> animals = peopleDAO.searchByOwner(userID);
-	        request.setAttribute("animals", animals);       
+	        
+	        //Get the animals reviews and owner names
+	        for (Animals animal : animals) {
+	        	System.out.println("animalid = " + animal.getId());
+	        	animal.review.addAll(peopleDAO.getReviews(animal.getId()));
+	        	System.out.println("reviewSize = " + animal.review.size());
+	        }
+	        
+	        request.setAttribute("animals", animals);     
 	        RequestDispatcher dispatcher = request.getRequestDispatcher("myAnimals.jsp");       
 	        dispatcher.forward(request, response);
     	}
     }
+    
+    //Shows the review form
+    private void createReview(HttpServletRequest request, HttpServletResponse response) 
+        throws SQLException, ServletException, IOException {
+    	if(authenticate(request, response)) {
+		    int animalID = Integer.parseInt(request.getParameter("animalID"));
+		    Animals reviewAnimal = peopleDAO.getAnimal(animalID);
+		    request.setAttribute("reviewAnimal", reviewAnimal);
+		    request.setAttribute("ownerID", reviewAnimal.getOwner());
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("createReview.jsp");
+		    dispatcher.forward(request, response);
+    	}
+  	}
+    
+    //Shows the review form
+    private void showReview(HttpServletRequest request, HttpServletResponse response) 
+        throws SQLException, ServletException, IOException {
+    	if(authenticate(request, response)) {
+		    int reviewID = Integer.parseInt(request.getParameter("reviewID"));
+		    Review review = peopleDAO.getReview(reviewID);
+		    Animals animal = peopleDAO.getAnimal(review.getAnimalID());
+		    request.setAttribute("animalName", animal.getName());
+		    request.setAttribute("review", review);
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("showReview.jsp");
+		    dispatcher.include(request, response);
+    	}
+  	}
+    
+    //Insert the review into the database
+    private void insertReview(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        String review = request.getParameter("review");
+        int reviewScore = Integer.parseInt(request.getParameter("reviewScore"));
+        int animalID = Integer.parseInt(request.getParameter("animalID"));
+        int ownerID = Integer.parseInt(request.getParameter("ownerID"));
+
+        Review newReview = new Review(review, reviewScore, animalID, ownerID);
+        
+        //See if the user posted more than 5 reviews
+        try {
+        	peopleDAO.insertReview(newReview);     
+        	 response.sendRedirect("AnimalList");
+        }catch(SQLException e) {
+        	RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalList");
+        	request.setAttribute("mt5reviews", true);
+ 		    dispatcher.forward(request, response);
+        }
+    }    
 }
