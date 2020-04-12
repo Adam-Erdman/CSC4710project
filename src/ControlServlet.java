@@ -267,7 +267,7 @@ public class ControlServlet extends HttpServlet {
     }
  
     private void insertPeople(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException {
+            throws SQLException, IOException, ServletException {
         String username = request.getParameter("username");
         String userpassword = request.getParameter("userpassword");
         String firstname = request.getParameter("firstname");
@@ -276,7 +276,9 @@ public class ControlServlet extends HttpServlet {
         
         People newPeople = new People(username, userpassword, firstname, lastname, emailaddress);
         peopleDAO.insert(newPeople);
-        response.sendRedirect("welcome.jsp");
+     	if(authenticate(request, response)) {
+     		response.sendRedirect("welcome.jsp");
+     	}
     }
  
     private void updatePeople(HttpServletRequest request, HttpServletResponse response)
