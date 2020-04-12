@@ -30,7 +30,7 @@
 			    <c:when test="${review.getReviewScore() == 3}">
 			      	Adorbs
 			    </c:when>    
-			       <c:when test="${review.getReviewScore() == 2}">
+			    <c:when test="${review.getReviewScore() == 2}">
 			      	Cray
 			    </c:when>    
 			    <c:otherwise>

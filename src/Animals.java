@@ -7,7 +7,6 @@ public class Animals {
 	protected String species;
     protected String birthdate;
     protected double adoptionPrice;
-    protected String traits; //how do we want to implement this? Array of strings?? -AE
     protected int ownerID;
     
     public List<Review> review = new ArrayList<Review>();
@@ -31,29 +30,27 @@ public class Animals {
         this.animalID = id;
     }
  
-    public Animals(int animalID, String name, String species, String birthdate, double adoptionPrice, String traits, int ownerID) {
+    public Animals(int animalID, String name, String species, String birthdate, double adoptionPrice, int ownerID) {
         this.name = name;
         this.species = species;
         this.birthdate = birthdate;
         this.adoptionPrice = adoptionPrice;
-        this.traits = traits;
         this.ownerID = ownerID;
         this.animalID = animalID;
     }
     
-    public Animals(String name, String species, String birthdate, double adoptionPrice, String traits, int ownerID) {
+    public Animals(String name, String species, String birthdate, double adoptionPrice, int ownerID) {
     	this.name = name;
         this.species = species;
         this.birthdate = birthdate;
         this.adoptionPrice = adoptionPrice;
-        this.traits = traits;
         this.ownerID = ownerID;
   }
  
     @Override
 	public String toString() {
 		return "Animal [=" + animalID + ", name=" + name + ", species=" + species + ", birthdate="
-				+ birthdate + ", adoption price=" + adoptionPrice + ", traits=" + traits + "]";
+				+ birthdate + ", adoption price=" + adoptionPrice + "]";
 	}
     
     public int getId() {
@@ -91,15 +88,7 @@ public class Animals {
     public void setAdoptionPrice(double adoptionPrice) {
         this.adoptionPrice = adoptionPrice;
     }
-    
-    public String getTraits() {
-        return traits;
-    }
- 
-    public void setTraits(String traits) {
-        this.traits = traits;
-    }
- 
+     
     public int getOwner() {
     	return ownerID;
     }

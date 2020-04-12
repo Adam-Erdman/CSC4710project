@@ -3,6 +3,7 @@ import java.io.PrintWriter;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -30,7 +31,7 @@ public class ControlServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private PeopleDAO peopleDAO;
 	private HttpSession session = null;
-
+	private List<Animals> animals = null;
     
     public void init() {
         peopleDAO = new PeopleDAO(); 
@@ -87,7 +88,7 @@ public class ControlServlet extends HttpServlet {
             	updateAnimal(request, response);
                 break;
             case "/AnimalList":
-            	animalListForm(request, response);
+            	animalListForm(request, response, animals);
                 break;
             case "/AnimalRegistrationForm":
             	animalRegistrationForm(request, response);
@@ -162,9 +163,8 @@ public class ControlServlet extends HttpServlet {
     		String species = "species" + i;
     		String birthdate = "birthday" + i;
     		Double adoptionPrice = (double) (i*10);
-    		String traits = "traits" + i;
     		int owner = i;
-    		Animals animal = new Animals(name, species, birthdate, adoptionPrice, traits, owner);
+    		Animals animal = new Animals(name, species, birthdate, adoptionPrice, owner);
     		peopleDAO.insertAnimal(animal);
     	}
     	
@@ -177,7 +177,18 @@ public class ControlServlet extends HttpServlet {
     		Review review= new Review(reviewText, reviewScore, animalID, ownerID);
     		peopleDAO.insertReview(review);
     	}
-        response.sendRedirect("welcome.jsp");		
+     	
+     	//Insert traits in the trait table
+     	for (int i = 1; i < 15; i++) {
+     		int animalID = i;
+    		String traitText = "trait" + i;
+    		Trait trait= new Trait(animalID, traitText);
+    		peopleDAO.insertTrait(trait);	
+		}
+     	
+     	if(authenticate(request,response)) {
+			response.sendRedirect("welcome.jsp");
+		}		
 	}
 	
 	private boolean authenticate(HttpServletRequest request, HttpServletResponse response) 
@@ -190,7 +201,6 @@ public class ControlServlet extends HttpServlet {
 			return false;
 	}
 		
-	 
 	private void login(HttpServletRequest request, HttpServletResponse response) 
     		throws SQLException, IOException, ServletException{
 		
@@ -320,12 +330,20 @@ public class ControlServlet extends HttpServlet {
 	        String name = request.getParameter("name");
 	        String species = request.getParameter("species");
 	        String birthdate = request.getParameter("birthdate");
-	        Double adoptionPrice = Double.parseDouble(request.getParameter("adoptionPrice"));
 	        String traits = request.getParameter("traits");
+	        Double adoptionPrice = Double.parseDouble(request.getParameter("adoptionPrice"));
 	        int ownerID =  (Integer) (session.getAttribute("userID"));
 	        
-	        Animals newAnimals = new Animals(name, species, birthdate, adoptionPrice, traits, ownerID);
-	        peopleDAO.insertAnimal(newAnimals);
+	        Animals newAnimals = new Animals(name, species, birthdate, adoptionPrice, ownerID);
+	        int animalID = peopleDAO.insertAnimal(newAnimals);
+	        
+	        //Push each trait into the trait table 
+	        List<String> traitsList = Arrays.asList(traits.split(","));
+	        for (String traitText : traitsList) {
+	        	traitText = traitText.replaceAll("\\s+",""); // Remove all whitespace
+	        	Trait trait = new Trait(animalID, traitText);
+				peopleDAO.insertTrait(trait);
+			}
 	        response.sendRedirect("AnimalList");
     	}
     }
@@ -338,31 +356,32 @@ public class ControlServlet extends HttpServlet {
 	        String species = request.getParameter("species");
 	        String birthdate = request.getParameter("birthdate");
 	        Double adoptionPrice = Double.parseDouble(request.getParameter("adoptionPrice"));
-	        String traits = request.getParameter("traits");
 	        int ownerID = Integer.parseInt(request.getParameter("ownerID"));
 	        
 	        System.out.println(name);
 	        
-	        Animals animals = new Animals(animalID, name, species, birthdate, adoptionPrice, traits, ownerID);
+	        Animals animals = new Animals(animalID, name, species, birthdate, adoptionPrice, ownerID);
 	        peopleDAO.updateAnimal(animals);
 	        response.sendRedirect("myAnimals");
     	}
     }
    
-    private void animalListForm(HttpServletRequest request, HttpServletResponse response)
-            throws SQLException, IOException, ServletException {
+    //Can pass a list of animals (optional)
+    private void animalListForm(HttpServletRequest request, HttpServletResponse response, 
+    		List<Animals> animalList) throws SQLException, IOException, ServletException {
     	if(authenticate(request, response)) {
-	        List<Animals> animalListForm = peopleDAO.listAllAnimals();
+    		if(animalList == null)
+    			animalList = peopleDAO.listAllAnimals();
 	        List<String> ownerFullname = new ArrayList<String>();
 	        
 	        //Display owner first and last name (fullname)
-	        for (Animals animal : animalListForm) {
+	        for (Animals animal : animalList) {
 	        	int id = animal.getOwner();
 				String fullName = peopleDAO.getUserFullName(id);
 				ownerFullname.add(fullName);
 			}
 	        
-	        request.setAttribute("animalListForm", animalListForm);       
+	        request.setAttribute("animalListForm", animalList);       
 	        request.setAttribute("ownerFullName", ownerFullname);
 	        RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalList.jsp");       
 	        dispatcher.forward(request, response);
@@ -372,8 +391,8 @@ public class ControlServlet extends HttpServlet {
     private void animalListFormDropDown(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
     	if(authenticate(request, response)) {
-	        List<Animals> animalListFormDropDown = peopleDAO.listAllAnimals();
-	        request.setAttribute("animalListFormDropDown", animalListFormDropDown);       
+	        List<String> traitNames = peopleDAO.getTraitNames();
+	        request.setAttribute("traitNames", traitNames);       
 	        RequestDispatcher dispatcher = request.getRequestDispatcher("AdoptionSearchForm.jsp");       
 	        dispatcher.forward(request, response);
     	}
@@ -382,10 +401,9 @@ public class ControlServlet extends HttpServlet {
     private void searchByTrait(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
     	if(authenticate(request, response)) {
-	        List<Animals> searchByTrait = peopleDAO.listByTrait();
-	        request.setAttribute("searchByTrait", searchByTrait);       
-	        RequestDispatcher dispatcher = request.getRequestDispatcher("SearchByTraitList.jsp");       
-	        dispatcher.forward(request, response);
+	        String trait = request.getParameter("trait");
+	        List<Animals> searchByTrait = peopleDAO.getAnimalByTrait(trait);
+	        animalListForm(request,response,searchByTrait);
     	}
     }
     
