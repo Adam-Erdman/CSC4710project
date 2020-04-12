@@ -18,18 +18,19 @@
         </h2>
     </center>
     <div align="center">
-       
+      
    
        <form action="SearchByTrait" method="post">
        <label for="animals">Choose a trait:</label>
 			    
 			
-			<select id="animals">
+			<select name="animals">
 			<c:forEach items="${animalListFormDropDown}" var="animals">
 			  <option value="<c:out value="${animals.getTraits()}" />"><c:out value="${animals.getTraits()}" /></option>
 			  </c:forEach>
 			</select>
       <input type="submit" value="Submit">
+      
 	</form>
         
         
