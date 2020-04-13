@@ -6,7 +6,13 @@ public class Review {
     protected int animalID;
     protected int ownerID;
     protected String reviewersName;
+    protected int reviewCount;
 	    
+    public Review(int ownerID, int reviewCount) {
+    	this.ownerID = ownerID;
+    	this.reviewCount = reviewCount;
+    }
+    
 	public Review(int reviewID, String review, int reviewScore, int animalID, int ownerID, String reviewersName) {
 		this.reviewID = reviewID;
 		this.review = review;
@@ -30,7 +36,7 @@ public class Review {
 		this.animalID = animalID;
 		this.ownerID = ownerID;
 	}
-
+	
 	public int getReviewID() {
 		return reviewID;
 	}
@@ -77,6 +83,10 @@ public class Review {
 
 	public void setReviewersName(String reviewersName) {
 		this.reviewersName = reviewersName;
+	}
+	
+	public int getReviewCount()	{
+		return reviewCount;
 	}
 	
 	@Override
