@@ -118,6 +118,9 @@ public class ControlServlet extends HttpServlet {
             case "/mostExpensiveAnimals":
             	mostExpensiveAnimals(request,response);
             	break;
+            case "/topReviewers":
+            	topReviewers(request,response);
+            	break;
             default:   	
             	pageNotFound(request,response);
             	break;
@@ -525,4 +528,23 @@ public class ControlServlet extends HttpServlet {
 	        animalListForm(request,response,searchByTrait);
     	}
     }
+    
+	private void topReviewers(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        List<Review> reviewers = peopleDAO.getTopReviewers();
+        List<String> ownerFullname = new ArrayList<String>();
+        
+        //Display owner first and last name (fullname)
+        for (Review reviewer : reviewers) {
+        	int id = reviewer.getOwnerID();
+			String fullName = peopleDAO.getUserFullName(id);
+			ownerFullname.add(fullName);
+		}
+           
+        request.setAttribute("reviewers", reviewers);   
+        request.setAttribute("ownerFullName", ownerFullname);
+        RequestDispatcher dispatcher = request.getRequestDispatcher("topReviewers.jsp");       
+        dispatcher.forward(request, response);
+    }
+ 
 }

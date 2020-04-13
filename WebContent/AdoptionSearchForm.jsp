@@ -15,7 +15,6 @@
             <a href="searchOptions.jsp">Search Options</a>
             &nbsp;&nbsp;&nbsp;
            <a href="welcome">Home</a>
-            &nbsp;&nbsp;&nbsp;
         </h2>
     </center>
     <div align="center">

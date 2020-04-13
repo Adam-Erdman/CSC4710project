@@ -127,20 +127,20 @@ public class PeopleDAO extends HttpServlet {
 				" 	birthdate VARCHAR(50) NOT NULL, " + 
 				" 	adoptionPrice FLOAT(50) NOT NULL, " + 
 				" 	ownerID INTEGER not NULL," +
-				" 	PRIMARY KEY (animalID)," + 
+				" 	PRIMARY KEY (animalID), " + 
 				" 	FOREIGN KEY (ownerID) REFERENCES users(id)" + 
 				" 	ON DELETE CASCADE)";
 		
 		String deleteReviewTable = "DROP TABLE IF EXISTS reviews";
 		String createReviewTable = "CREATE TABLE IF NOT EXISTS reviews" + 
-				"    (reviewID int not NULL AUTO_INCREMENT," + 
-				"    review VARCHAR(500) NOT NULL," + 
-				"    reviewScore int not NULL," + 
-				"    animalID int not NULL," + 
-				"    ownerID int not NULL," + 
-				"    PRIMARY KEY (ReviewID)," + 
-				"    FOREIGN KEY (animalID) REFERENCES animals(animalID)," + 
-				"    FOREIGN KEY (ownerID) REFERENCES animals(ownerID)" + 
+				"    (reviewID int not NULL AUTO_INCREMENT, " + 
+				"    review VARCHAR(500) NOT NULL, " + 
+				"    reviewScore int not NULL, " + 
+				"    animalID int not NULL, " + 
+				"    ownerID int not NULL, " + 
+				"    PRIMARY KEY (ReviewID), " + 
+				"    FOREIGN KEY (animalID) REFERENCES animals(animalID), " + 
+				"    FOREIGN KEY (ownerID) REFERENCES animals(ownerID) " + 
 				"    ON DELETE CASCADE)";
 		
 		String deleteTraitTable = "DROP TABLE IF EXISTS traits"; 
@@ -529,5 +529,32 @@ public class PeopleDAO extends HttpServlet {
         resultSet.close();
         preparedStatement.close();
         return review;
+    }
+    
+    //Returns top 5 reviewers based on their count
+    public List<Review> getTopReviewers() throws SQLException {
+    	List<Review> topReviewers = new ArrayList<Review>();
+        String sql = "SELECT ownerID, COUNT(animalID) as count " +
+        			 "FROM reviews " + 
+	        		 "GROUP BY ownerID " +
+	        		 "ORDER BY count DESC " +
+	        		 "LIMIT 5";
+        
+        connect_func();
+                 
+        statement =  (Statement) connect.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+
+        while (resultSet.next()) {
+            int ownerID = resultSet.getInt("ownerID");
+            int count = resultSet.getInt("count");
+            
+            Review reviewer = new Review(ownerID, count);
+            topReviewers.add(reviewer);
+        }        
+
+        resultSet.close();
+        statement.close();
+        return topReviewers;
     }
 }
