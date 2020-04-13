@@ -109,6 +109,20 @@ public class PeopleDAO extends HttpServlet {
     public void wipe() throws SQLException{
 		connect_func();
 		
+		String deleteFavAnimal = "DROP TABLE IF EXISTS favAnimal";
+		String createFavAnimal = "CREATE TABLE IF NOT EXISTS favAnimal " +
+				"	(id INTEGER not NULL AUTO_INCREMENT, " +
+				"	username VARCHAR(50) NOT NULL, " + 
+				"   animalID int not NULL," + 
+				"	PRIMARY KEY ( id ))"; 
+		
+		String deleteFavBreeder = "DROP TABLE IF EXISTS favBreeder";
+		String createFavBreeder = "CREATE TABLE IF NOT EXISTS favBreeder " +
+				"	(id INTEGER not NULL AUTO_INCREMENT, " +
+				"	username VARCHAR(50) NOT NULL, " + 
+				" 	ownerID INTEGER not NULL," +
+				"	PRIMARY KEY ( id ))"; 
+		
 		String deleteUserTable = "DROP TABLE IF EXISTS users";
 		String createUserTable = "CREATE TABLE IF NOT EXISTS users " +
 				"	(id INTEGER not NULL AUTO_INCREMENT, " +
@@ -169,10 +183,14 @@ public class PeopleDAO extends HttpServlet {
 		statement.executeUpdate(deleteTraitTable);
 	    statement.executeUpdate(deleteAnimalTable); //added for part 2 -ae
 	    statement.executeUpdate(deleteUserTable);
+	    statement.executeUpdate(deleteFavAnimal);
+	    statement.executeUpdate(deleteFavBreeder);
 	    statement.executeUpdate(createUserTable);
 	    statement.executeUpdate(createAnimalTable); //added for part 2 -ae
 	    statement.executeUpdate(createTraitTable);
 	    statement.executeUpdate(createReviewTable);
+	    statement.executeUpdate(createFavAnimal);
+	    statement.executeUpdate(createFavBreeder);
 	    statement.executeUpdate(reviewTrigger);
 	    
 	    statement.close();
@@ -529,5 +547,33 @@ public class PeopleDAO extends HttpServlet {
         resultSet.close();
         preparedStatement.close();
         return review;
+    }
+    
+    public boolean saveAnimal(int animalId) throws SQLException {
+    	connect_func();         
+       
+    	String sql = "insert into favAnimal(username, animalID) values (?, ?)";
+    	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+		preparedStatement.setString(1, "username");
+		preparedStatement.setInt(2, animalId);
+		
+        boolean rowInserted = preparedStatement.executeUpdate() > 0;
+        preparedStatement.close();
+
+        return rowInserted;    	
+    }
+    
+    public boolean saveBreeder(int ownerId) throws SQLException {
+    	connect_func();         
+        
+    	String sql = "insert into favbreeder(username, ownerID) values (?, ?)";
+    	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+		preparedStatement.setString(1, "username");
+		preparedStatement.setInt(2, ownerId);
+		
+        boolean rowInserted = preparedStatement.executeUpdate() > 0;
+        preparedStatement.close();
+
+        return rowInserted; 
     }
 }

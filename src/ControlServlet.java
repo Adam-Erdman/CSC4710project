@@ -118,6 +118,12 @@ public class ControlServlet extends HttpServlet {
             case "/mostExpensiveAnimals":
             	mostExpensiveAnimals(request,response);
             	break;
+            case "/saveAnimal":
+            	saveAnimal(request,response);
+            	break;
+            case "/saveBreeder":
+            	saveBreeder(request,response);
+            	break;
             default:   	
             	pageNotFound(request,response);
             	break;
@@ -330,13 +336,33 @@ public class ControlServlet extends HttpServlet {
     }
  ///////////////////////part 2/////////////////////////
     
+    private void saveAnimal(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+    	if(authenticate(request, response)) {
+	        int animalID = Integer.parseInt(request.getParameter("animalID"));
+	        //People people = new People(id);
+	        peopleDAO.saveAnimal(animalID);
+	        //response.sendRedirect("list"); 
+    	}
+    }
+    
+    private void saveBreeder(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+    	if(authenticate(request, response)) {
+	        int ownerId = Integer.parseInt(request.getParameter("ownerID"));
+	        //People people = new People(id);
+	        peopleDAO.saveBreeder(ownerId);
+	        //response.sendRedirect("list"); 
+    	}
+    }
+    
     private void deleteAnimal(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
     	if(authenticate(request, response)) {
 	        int animalID = Integer.parseInt(request.getParameter("animalID"));
 	        //People people = new People(id);
 	        peopleDAO.deleteAnimal(animalID);
-	        response.sendRedirect("list"); 
+	        //response.sendRedirect("list"); 
     	}
     }
     

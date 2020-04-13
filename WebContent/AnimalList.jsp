@@ -30,6 +30,8 @@
                 <th>Owner</th>
                 <th>Adoption Price</th>
                 <th>Review</th>
+                <th>Save Animal</th>
+                <th>Save Breeder</th>
             </tr>           
             <c:forEach begin="0" end="${fn:length(animalListForm) - 1}" var="i">
                 <tr>
@@ -38,6 +40,17 @@
                     <td><c:out value="${ownerFullName[i]}" /></td>                      
                     <td>$<c:out value="${animalListForm[i].getAdoptionPrice()}"/></td>
                     <td><a href="createReview?animalID=<c:out value='${animalListForm[i].getId()}'/>">Create Review</a></td>
+                    <td>
+                     <form action="saveAnimal?animalID=${animalListForm[i].getId()}&ownerID=${animalListForm[i].getOwner()}" method="post">
+                    <input type="submit" value="Favorite" />
+                     </form>
+                    </td>
+                    
+                     <td>
+                     <form action="saveBreeder?animalID=${animalListForm[i].getId()}&ownerID=${animalListForm[i].getOwner()}" method="post">
+                    <input type="submit" value="Favorite" NAME="username" />
+                     </form>
+                    </td>
                 </tr>
             </c:forEach>
         </table>
