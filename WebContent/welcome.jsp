@@ -7,7 +7,7 @@
 </head>
 <body>
     <div align="center">
-        <h1>Welcome ${userName}!</h1>
+        <h1>Welcome ${firstName}!</h1>
            <h2>
            <a href="myAnimals">My animals</a>
             &nbsp;&nbsp;&nbsp;	

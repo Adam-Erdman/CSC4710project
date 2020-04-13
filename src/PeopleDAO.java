@@ -112,11 +112,11 @@ public class PeopleDAO extends HttpServlet {
 		String deleteUserTable = "DROP TABLE IF EXISTS users";
 		String createUserTable = "CREATE TABLE IF NOT EXISTS users " +
 				"	(id INTEGER not NULL AUTO_INCREMENT, " +
-				"	username VARCHAR(50) NOT NULL, " + 
+				"	username VARCHAR(50) NOT NULL UNIQUE, " + 
 				" 	userpassword VARCHAR(50) NOT NULL, " + 
 				" 	firstname VARCHAR(50) NOT NULL, " + 
 				" 	lastname VARCHAR(50) NOT NULL, " + 
-				" 	emailaddress varchar(50) not NULL," +
+				" 	emailaddress varchar(50) not NULL UNIQUE," +
 				"	PRIMARY KEY ( id ))"; 
 		
 		String deleteAnimalTable ="DROP TABLE IF EXISTS animals"; //added for part 2 -ae

@@ -274,11 +274,22 @@ public class ControlServlet extends HttpServlet {
         String lastname = request.getParameter("lastname");
         String emailaddress = request.getParameter("emailaddress");
         
-        People newPeople = new People(username, userpassword, firstname, lastname, emailaddress);
-        peopleDAO.insert(newPeople);
-     	if(authenticate(request, response)) {
-     		response.sendRedirect("welcome.jsp");
-     	}
+        //See if the username and password and unique 
+        try {
+            People newPeople = new People(username, userpassword, firstname, lastname, emailaddress);
+            peopleDAO.insert(newPeople);
+         	if(authenticate(request, response)) {
+         		response.sendRedirect("welcome.jsp");
+         	}
+        } catch (SQLException e) {
+        	if(e.getMessage().contains("users.username")) 
+        		request.setAttribute("msg", "Username must be unique!");
+        	else if(e.getMessage().contains("users.emailaddress")) 
+        		request.setAttribute("msg", "Email addresss must be unique!");
+        	
+   			RequestDispatcher dispatcher = request.getRequestDispatcher("/newUser");
+   			dispatcher.forward(request, response);
+        }
     }
  
     private void updatePeople(HttpServletRequest request, HttpServletResponse response)

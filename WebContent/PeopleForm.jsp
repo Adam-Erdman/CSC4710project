@@ -18,6 +18,9 @@
         <c:if test="${people == null}">
             <form action="insertUser" method="post">
         </c:if>
+        <c:if test="${msg != null}">
+        	<h3><c:out value = "${msg}"></c:out></h3>
+        </c:if>
         <table border="1" cellpadding="5">
             <caption>
                 <h2>
