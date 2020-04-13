@@ -127,6 +127,9 @@ public class ControlServlet extends HttpServlet {
             case "/topReviewers":
             	topReviewers(request,response);
             	break;
+            case "/topAnimals":
+            	topAnimals(request,response);
+            	break;
             default:   	
             	pageNotFound(request,response);
             	break;
@@ -573,9 +576,6 @@ public class ControlServlet extends HttpServlet {
 	        List<Animals> searchByTrait = peopleDAO.getAnimalByTrait(trait);
 	        Comparator<Animals> comparator = Comparator.comparing(a -> a.getAdoptionPrice());
 	        searchByTrait.sort(comparator.reversed());
-	        for (Animals animal : searchByTrait) {
-				animal.toString();
-			}
 	        animalListForm(request,response,searchByTrait);
     	}
     }
@@ -596,6 +596,22 @@ public class ControlServlet extends HttpServlet {
         request.setAttribute("ownerFullName", ownerFullname);
         RequestDispatcher dispatcher = request.getRequestDispatcher("topReviewers.jsp");       
         dispatcher.forward(request, response);
+    }
+	
+	//Show top reviewed animals and include their rating
+	private void topAnimals(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        List<Review> topAnimalReviews = peopleDAO.getTopAnimals();
+        List<Integer> reviewScores = new ArrayList<Integer>();
+        List<Animals> topAnimals = new ArrayList<Animals>();
+        
+        //Get a list of the top animals from the reviews
+        for (Review review : topAnimalReviews) {
+			topAnimals.add(peopleDAO.getAnimal(review.getAnimalID()));
+			reviewScores.add(review.getReviewScore());
+		}
+        request.setAttribute("reviewScores", reviewScores);   
+        animalListForm(request,response, topAnimals);
     }
  
 }

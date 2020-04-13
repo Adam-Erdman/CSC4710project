@@ -663,4 +663,32 @@ public class PeopleDAO extends HttpServlet {
         return topReviewers;
 
     }
+    
+    //Select ratings 4 and 3
+    public List<Review> getTopAnimals() throws SQLException {
+    	List<Review> topAnimals = new ArrayList<Review>();
+        String sql = "SELECT * FROM reviews "+
+        		     "where reviewScore = 4 OR reviewScore = 3";
+        
+        connect_func();
+        statement =  (Statement) connect.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+        
+        while (resultSet.next()) {
+            int reviewID = resultSet.getInt("reviewID");
+            String reviewText = resultSet.getString("review");
+            int reviewScore = resultSet.getInt("reviewScore");
+        	int animalID = resultSet.getInt("animalID");
+            int ownerID = resultSet.getInt("ownerID");
+            String fullName = getUserFullName(ownerID);    
+            
+            Review review = new Review(reviewID, reviewText,  reviewScore,  animalID,  ownerID, fullName);
+            topAnimals.add(review);
+        }        
+
+        resultSet.close();
+        statement.close();
+        return topAnimals;
+
+    }
 }

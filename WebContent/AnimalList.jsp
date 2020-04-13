@@ -29,6 +29,9 @@
                 <th>Species</th>
                 <th>Owner</th>
                 <th>Adoption Price</th>
+                <c:if test="${reviewScores != null}" >
+                	<th>Review Score</th>
+                </c:if>
                 <th>Review</th>
                 <th>Save Animal</th>
                 <th>Save Breeder</th>
@@ -39,7 +42,25 @@
                     <td><c:out value="${animalListForm[i].getSpecies()}" /></td>
                     <td><c:out value="${ownerFullName[i]}" /></td>                      
                     <td>$<c:out value="${animalListForm[i].getAdoptionPrice()}"/></td>
-                    <td><a href="createReview?animalID=<c:out value='${animalListForm[i].getId()}'/>">Create Review</a></td>
+                    <c:if test="${reviewScores != null}" >
+		            	<c:choose>
+							<c:when test="${reviewScores[i] == 4}">
+					      		<td>Totes Adorbs</td>
+					    	</c:when>    
+					    	<c:when test="${reviewScores[i] == 3}">
+					      		<td>Adorbs</td>
+					    	</c:when>    
+					    	<c:when test="${reviewScores[i] == 2}">
+					      		<td>Cray</td>
+					    	</c:when>    
+					    	<c:otherwise>
+								<td>Cray-Cray</td>
+					    	</c:otherwise>
+						</c:choose>
+               		 </c:if>
+                    <td>
+                    	<a href="createReview?animalID=<c:out value='${animalListForm[i].getId()}'/>">Create Review</a>
+                    </td>
                     <td>
                      <form action="saveAnimal?animalID=${animalListForm[i].getId()}&ownerID=${animalListForm[i].getOwner()}" method="post">
                     <input type="submit" value="Favorite" />
