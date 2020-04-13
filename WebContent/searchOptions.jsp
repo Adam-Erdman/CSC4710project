@@ -12,13 +12,11 @@
 		    <a href="AnimalListFormDropDown">Search Animals by Trait</a>
             &nbsp;&nbsp;&nbsp;
             <a href="mostExpensiveAnimalsForm">Most Expensive by Trait</a>
-            &nbsp;&nbsp;&nbsp;
-            
-            <a href="AnimalList">List High Rated Animals</a>
+            &nbsp;&nbsp;&nbsp; 
+            <a href="topAnimals">List Highest Rated Animals</a>
             &nbsp;&nbsp;&nbsp;
 			<a href="topReviewers">List Top Reviews</a>
             &nbsp;&nbsp;&nbsp;
-            
             <a href="AnimalList">List All Animals</a>
             &nbsp;&nbsp;&nbsp;
             <a href="welcome">Home</a>
