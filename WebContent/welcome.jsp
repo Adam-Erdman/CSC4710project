@@ -13,7 +13,7 @@
             &nbsp;&nbsp;&nbsp;	
             <a href="AnimalList">All animals</a>
             &nbsp;&nbsp;&nbsp;
-            <a href="AnimalListFormDropDown">Search Animals</a>
+            <a href="searchOptions.jsp">Search Options</a>
             &nbsp;&nbsp;&nbsp;
              <a href="AnimalRegistrationForm">Animal Registration</a>
             &nbsp;&nbsp;&nbsp;

@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -111,6 +112,12 @@ public class ControlServlet extends HttpServlet {
             case "/showReview":
             	showReview(request,response);
             	break;
+            case "/mostExpensiveAnimalsForm":
+            	mostExpensiveAnimalsForm(request,response);
+            	break;
+            case "/mostExpensiveAnimals":
+            	mostExpensiveAnimals(request,response);
+            	break;
             default:   	
             	pageNotFound(request,response);
             	break;
@@ -178,12 +185,16 @@ public class ControlServlet extends HttpServlet {
     		peopleDAO.insertReview(review);
     	}
      	
-     	//Insert traits in the trait table
+     	//Insert 2 traits in the trait table per animal
+     	//Second trait is a random one between 1-14
      	for (int i = 1; i < 15; i++) {
      		int animalID = i;
-    		String traitText = "trait" + i;
-    		Trait trait= new Trait(animalID, traitText);
-    		peopleDAO.insertTrait(trait);	
+    		String traitText1 = "trait" + i;
+    		String traitText2 = "trait" + ThreadLocalRandom.current().nextInt(1, 15);
+    		Trait trait1= new Trait(animalID, traitText1);
+    		Trait trait2= new Trait(animalID, traitText2);
+    		peopleDAO.insertTrait(trait1);	
+    		peopleDAO.insertTrait(trait2);	
 		}
      	
      	if(authenticate(request,response)) {
@@ -405,7 +416,9 @@ public class ControlServlet extends HttpServlet {
             throws SQLException, IOException, ServletException {
     	if(authenticate(request, response)) {
 	        List<String> traitNames = peopleDAO.getTraitNames();
+	        java.util.Collections.sort(traitNames);
 	        request.setAttribute("traitNames", traitNames);       
+	        request.setAttribute("redirectURL", "SearchByTrait");
 	        RequestDispatcher dispatcher = request.getRequestDispatcher("AdoptionSearchForm.jsp");       
 	        dispatcher.forward(request, response);
     	}
@@ -486,4 +499,30 @@ public class ControlServlet extends HttpServlet {
  		    dispatcher.forward(request, response);
         }
     }    
+    
+    private void mostExpensiveAnimalsForm(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+    	if(authenticate(request, response)) {
+	        List<String> traitNames = peopleDAO.getTraitNames();
+	        java.util.Collections.sort(traitNames);
+	        request.setAttribute("traitNames", traitNames);
+	        request.setAttribute("redirectURL", "mostExpensiveAnimals");
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("AdoptionSearchForm.jsp");       
+	        dispatcher.forward(request, response);
+    	}
+    }
+    
+    private void mostExpensiveAnimals(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+    	if(authenticate(request, response)) {
+	        String trait = request.getParameter("trait");
+	        List<Animals> searchByTrait = peopleDAO.getAnimalByTrait(trait);
+	        Comparator<Animals> comparator = Comparator.comparing(a -> a.getAdoptionPrice());
+	        searchByTrait.sort(comparator.reversed());
+	        for (Animals animal : searchByTrait) {
+				animal.toString();
+			}
+	        animalListForm(request,response,searchByTrait);
+    	}
+    }
 }

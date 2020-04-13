@@ -13,7 +13,7 @@
         <h2>
            <a href="myAnimals">My animals</a>
             &nbsp;&nbsp;&nbsp;
-           <a href="AnimalListFormDropDown">Search Animals</a>
+           <a href="searchOptions.jsp">Search Animals</a>
             &nbsp;&nbsp;&nbsp;
            <a href="welcome">Home</a>
         </h2>
