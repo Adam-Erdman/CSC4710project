@@ -339,23 +339,33 @@ public class ControlServlet extends HttpServlet {
     }
  ///////////////////////part 2/////////////////////////
     
+    //animalID is animal to be saved.
+    //userId is active user
+    //Saves breeder to favorites
     private void saveAnimal(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
     	if(authenticate(request, response)) {
 	        int animalID = Integer.parseInt(request.getParameter("animalID"));
+	        int userID =  (Integer) (session.getAttribute("userID"));
 	        //People people = new People(id);
-	        peopleDAO.saveAnimal(animalID);
-	        //response.sendRedirect("list"); 
+	        peopleDAO.saveAnimal(animalID, userID);
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("welcome");
+	    	dispatcher.forward(request, response); 
     	}
     }
     
+    //owner ID is the breeder of the pet
+    //userId is active user
+    //Saves breeder to favorites
     private void saveBreeder(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
     	if(authenticate(request, response)) {
 	        int ownerId = Integer.parseInt(request.getParameter("ownerID"));
+	        int userID =  (Integer) (session.getAttribute("userID"));
 	        //People people = new People(id);
-	        peopleDAO.saveBreeder(ownerId);
-	        //response.sendRedirect("list"); 
+	        peopleDAO.saveBreeder(ownerId, userID);
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("welcome");
+	    	dispatcher.forward(request, response); 
     	}
     }
     

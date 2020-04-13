@@ -550,12 +550,12 @@ public class PeopleDAO extends HttpServlet {
     }
     
 
-    public boolean saveAnimal(int animalId) throws SQLException {
+    public boolean saveAnimal(int animalId, int ownerID) throws SQLException {
     	connect_func();         
        
     	String sql = "insert into favAnimal(username, animalID) values (?, ?)";
     	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-		preparedStatement.setString(1, "username");
+		preparedStatement.setInt(1, ownerID);
 		preparedStatement.setInt(2, animalId);
 		
         boolean rowInserted = preparedStatement.executeUpdate() > 0;
@@ -564,12 +564,12 @@ public class PeopleDAO extends HttpServlet {
         return rowInserted;    	
     }
     
-    public boolean saveBreeder(int ownerId) throws SQLException {
+    public boolean saveBreeder(int ownerId, int userID) throws SQLException {
     	connect_func();         
         
     	String sql = "insert into favbreeder(username, ownerID) values (?, ?)";
     	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-		preparedStatement.setString(1, "username");
+		preparedStatement.setInt(1, userID);
 		preparedStatement.setInt(2, ownerId);
 		
         boolean rowInserted = preparedStatement.executeUpdate() > 0;
