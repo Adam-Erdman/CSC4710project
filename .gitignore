@@ -1,3 +1,4 @@
 #ignore proejct settings
 .classpath
 .project
+.settings/*
