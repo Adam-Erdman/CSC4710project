@@ -718,6 +718,54 @@ public class PeopleDAO extends HttpServlet {
         preparedStatement.close();
         return listAnimals;
     }
+        
+    public List<People> userNeverCray(int userID) throws SQLException {
+    	List<People> listPeople = new ArrayList<People>();  
+        String sql = "select" + 
+        		"	*" + 
+        		"  from" + 
+        		"	users" + 
+        		"  where " + 
+        		"	id in(" + 
+        		"  " + 
+        		"  Select" + 
+        		"	ownerID" + 
+        		"  from" + 
+        		"	animals" + 
+        		"  where" + 
+        		"	animalID not in(" + 
+        		"    select animalID" + 
+        		"    from reviews" + 
+        		"    where reviewscore <=1))";
+
+         
+        connect_func();
+         
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+//        preparedStatement.setInt(1, userID);
+//        preparedStatement.setInt(2, userID);
+         
+        ResultSet resultSet = preparedStatement.executeQuery();
+         
+        while (resultSet.next()) {
+            int id = resultSet.getInt("id");
+            String username = resultSet.getString("username");
+            String userpassword = resultSet.getString("userpassword");
+            String firstname = resultSet.getString("firstname");
+            String lastname = resultSet.getString("lastname");
+            String emailaddress = resultSet.getString("emailaddress");
+                         
+            People people = new People( id, username, userpassword, firstname, lastname, emailaddress);
+
+            listPeople.add(people);
+        } 
+
+        resultSet.close();
+        preparedStatement.close();
+        return listPeople;
+    }
+    
+    
 
 
     //Returns top 5 reviewers based on their count
