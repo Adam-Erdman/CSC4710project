@@ -14,6 +14,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
-	<classpathentry kind="lib" path="C:/Users/goatl/eclipse-workspace/CSC4710project/WebContent/WEB-INF/lib/servlet-api.jar"/>
+	<classpathentry kind="lib" path="C:/Users/7h3bu/OneDrive/Documents/Wayne State University/CSC 4710/project/CSC4710project/WebContent/WEB-INF/lib/servlet-api.jar"/>
 	<classpathentry kind="output" path="build/classes"/>
 </classpath>
