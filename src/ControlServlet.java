@@ -160,9 +160,9 @@ public class ControlServlet extends HttpServlet {
             case "/deleteSavedAnimals":
             	deleteSavedAnimals(request, response);
             	break;
-//            case "/noCrayCrayUsers":
-//            	noCrayCrayUsers(request, response);
-//            	break;
+            case "/usersNeverCray":
+            	usersNeverCray(request, response);
+            	break;
             default:   	
             	pageNotFound(request,response);
             	break;
@@ -645,6 +645,23 @@ public class ControlServlet extends HttpServlet {
 
 
 	    	RequestDispatcher dispatcher = request.getRequestDispatcher("listCommonPets.jsp");
+	        dispatcher.forward(request, response);
+	        System.out.println("logged in with " + session.getAttribute("userName"));
+    	}
+    }
+    
+    private void usersNeverCray(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+    	if(authenticate(request, response)) {
+    		int userID =  (Integer) (session.getAttribute("userID"));
+
+			List<People> neverCray = peopleDAO.userNeverCray(userID);
+
+
+			request.setAttribute("neverCray", neverCray );
+
+
+	    	RequestDispatcher dispatcher = request.getRequestDispatcher("usersNeverCray.jsp");
 	        dispatcher.forward(request, response);
 	        System.out.println("logged in with " + session.getAttribute("userName"));
     	}
