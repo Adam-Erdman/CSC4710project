@@ -837,11 +837,11 @@ public class PeopleDAO extends HttpServlet {
     }
     
     public List<Integer> getNotCrayCray() throws SQLException {
-    	List<Integer> notRidicAdorbsUsers = new ArrayList<Integer>();
-        String sql = "SELECT ownerID FROM Animals " + 
-        		"WHERE ownerID NOT IN(" + 
-        		"SELECT animalID FROM reviews " + 
-        		"WHERE reviewScore = 1);";
+    	List<Integer> notCrayCrayUsers = new ArrayList<Integer>();
+        String sql = "SELECT * FROM users " + 
+	        		"WHERE id NOT IN(" + 
+	        		"SELECT animalID FROM reviews " + 
+	        		"WHERE reviewScore = 1);";
         
         connect_func();
         statement =  (Statement) connect.createStatement();
@@ -849,11 +849,30 @@ public class PeopleDAO extends HttpServlet {
         ResultSet resultSet = statement.executeQuery(sql);
         while (resultSet.next()) {
             int ownerID = resultSet.getInt("ownerID");
-            notRidicAdorbsUsers.add(ownerID);
+            notCrayCrayUsers.add(ownerID);
         }        
 
         resultSet.close();
         statement.close();
-        return notRidicAdorbsUsers;
+        return notCrayCrayUsers;
+    }
+    
+    public List<Integer> getNegativeReviewers() throws SQLException {
+    	List<Integer> negativeReviewers = new ArrayList<Integer>();
+        String sql = "SELECT ownerID FROM reviews " + 
+	        		"GROUP BY ownerID " + 
+	        		"HAVING MAX(ReviewScore)<= 2";
+        connect_func();
+        statement =  (Statement) connect.createStatement();
+        
+        ResultSet resultSet = statement.executeQuery(sql);
+        while (resultSet.next()) {
+            int ownerID = resultSet.getInt("ownerID");
+            negativeReviewers.add(ownerID);
+        }         
+
+        resultSet.close();
+        statement.close();
+        return negativeReviewers;
     }
 }

@@ -148,6 +148,9 @@ public class ControlServlet extends HttpServlet {
             case "/notCrayCray":
             	notCrayCray(request, response);
             	break;
+            case "/negativeReviewers":
+            	negativeReviewers(request, response);
+            	break;
             case "/listCommonPets":
             	listCommonPets(request, response);
             	break;
@@ -716,6 +719,18 @@ public class ControlServlet extends HttpServlet {
         List<Integer> notRidicAdorbsUsers = peopleDAO.getNotCrayCray();
         List<People> users = new ArrayList<People>();
         for (Integer userID : notRidicAdorbsUsers) {
+	        users.add(peopleDAO.getUser(userID));
+		}
+        request.setAttribute("users", users);       
+        RequestDispatcher dispatcher = request.getRequestDispatcher("usersBySpecies.jsp");       
+        dispatcher.forward(request, response);
+    }
+	
+	private void negativeReviewers(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        List<Integer> negativeReviewers = peopleDAO.getNegativeReviewers();
+        List<People> users = new ArrayList<People>();
+        for (Integer userID : negativeReviewers) {
 	        users.add(peopleDAO.getUser(userID));
 		}
         request.setAttribute("users", users);       

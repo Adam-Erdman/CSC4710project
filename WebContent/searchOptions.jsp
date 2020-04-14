@@ -22,6 +22,7 @@
 	    	<tr><th><a href="listUserBySpecies">Find Breeder listing Specific Species</a></th></tr>
 	    	<tr><th><a href="notRidicAdorbs">Breeders without Ridic Adorbs Reviews</a></th></tr>
 	    	<tr><th><a href="notCrayCray">Breeders without Cray Cray Reviews</a></th></tr>
+	    	<tr><th><a href="negativeReviewers">List Negative Reviewers</a></th></tr>
 	    	<tr><th><a href="listCommonPets">List Pets Someone Else Also Likes</a><br></th></tr>
 	    	<tr><th><a href="AnimalList">List All Animals</a></th></tr>
     	</table>
