@@ -266,9 +266,24 @@ public class ControlServlet extends HttpServlet {
 	private void welcomeForm(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
 		session = request.getSession();
+		
+		 int userID =  (Integer) (session.getAttribute("userID"));
+		 
+		List<Animals> savedAnimals = peopleDAO.getSavedAnimal(userID);
+		List<Animals> savedBreeders = peopleDAO.getSavedBreeder(userID);
+		
+		for (Animals animal : savedAnimals) {
+			System.out.println(animal.toString());
+		}
+		
+		 request.setAttribute("savedAnimals", savedAnimals );
+		 request.setAttribute("savedBreeders", savedBreeders);
+		 
 		if(authenticate(request,response)) {
-			response.sendRedirect("welcome.jsp");
+			
 	    	System.out.println("logged in with " + session.getAttribute("userName"));
+	    	RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
+	        dispatcher.forward(request, response);
 		}
 	}
 

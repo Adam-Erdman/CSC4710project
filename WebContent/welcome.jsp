@@ -24,6 +24,49 @@
             <a href="logout">Logout</a>
             &nbsp;&nbsp;&nbsp;
         </h2>
+        
+    </div>
+    <div align ="center">
+     <table border="1" cellpadding="5">
+            <caption><h2>Favorite Pets</h2></caption>
+            <tr>
+                <th>Pet Name</th>
+                <th>Species</th>
+                <th>Owner</th>
+                <th>Adoption Price</th>
+                
+            </tr>           
+          <c:forEach items="${savedAnimals}" var="animals">
+                <tr>
+                    <td><c:out value="${animals.getName()}" /></td>
+                    <td><c:out value="${animals.getSpecies()}" /></td>
+                    <td><c:out value="${animals.getOwner()}" /></td>      
+                    <td><c:out value="${animals.getAdoptionPrice()}" /></td>                   
+                    
+                   
+                </tr>
+            </c:forEach>
+        </table>
+         <table border="1" cellpadding="5">
+            <caption><h2>Favorite Breeders</h2></caption>
+            <tr>
+                <th>Pet Name</th>
+                <th>Species</th>
+                <th>Owner</th>
+                <th>Adoption Price</th>
+               
+            </tr>           
+          <c:forEach items="${savedBreeders}" var="animals">
+                <tr>
+                    <td><c:out value="${animals.getName()}" /></td>
+                    <td><c:out value="${animals.getSpecies()}" /></td>
+                    <td><c:out value="${animals.getOwner()}" /></td>      
+                    <td><c:out value="${animals.getAdoptionPrice()}" /></td>                   
+                    
+                   
+                </tr>
+            </c:forEach>
+        </table>
     </div>
 </body>
 </html>
