@@ -219,6 +219,17 @@ public class ControlServlet extends HttpServlet {
     		Animals animal = new Animals(name, species, birthdate, adoptionPrice, owner);
     		peopleDAO.insertAnimal(animal);
     	}
+    	
+    	//Insert animals for root
+    	for(int i = 1; i < 4; i++) {
+    		String name = "pet" + i;
+    		String species = "species" + i;
+    		String birthdate = "birthday" + i;
+    		Double adoptionPrice = (double) (i*10);
+    		int owner = 1;
+    		Animals animal = new Animals(name, species, birthdate, adoptionPrice, owner);
+    		peopleDAO.insertAnimal(animal);
+    	}
 
     	//Create reviews
      	for(int i = 1; i < 15; i++) {
