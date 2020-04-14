@@ -670,13 +670,18 @@ public class PeopleDAO extends HttpServlet {
     }
     public List<Animals> getCommonPets(int userID) throws SQLException {
     	List<Animals> listAnimals = new ArrayList<Animals>();  
-        String sql = "Select" + 
+        String sql = "Select " + 
         		"  *" + 
-        		"From" + 
+        		" From" + 
         		"  animals" + 
-        		"  WHERE" + 
-        		"  animals.ownerID <> ? AND" + 
-        		"  animals.animalID IN (" + 
+        		" where animalID in(" + 
+        		"  Select" + 
+        		"  animalID" + 
+        		" From" + 
+        		"  favanimal" + 
+        		" WHERE" + 
+        		" username <> ? AND" + 
+        		"  animalID IN (" + 
         		"    SELECT" + 
         		"      animals.animalID" + 
         		"    FROM" + 
@@ -685,7 +690,7 @@ public class PeopleDAO extends HttpServlet {
         		"    WHERE" + 
         		"      animals.animalID = favanimal.animalID" + 
         		"      AND ? = favanimal.username" + 
-        		"  )";
+        		"  ))";
 
          
         connect_func();
