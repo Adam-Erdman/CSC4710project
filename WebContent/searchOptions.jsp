@@ -24,7 +24,8 @@
 	    	<tr><th><a href="notCrayCray">Breeders without Cray Cray Reviews</a></th></tr>
 	    	<tr><th><a href="negativeReviewers">List Negative Reviewers</a></th></tr>
 	    	<tr><th><a href="listCommonPets">List Pets Someone Else Also Likes</a><br></th></tr>
-	    	<tr><th><a href="AnimalList">List All Animals</a></th></tr>
+	    	<tr><th><a href="negativeReviewers">List Negative Reviewers</a></th></tr>
+	    	<tr><th><a href="noCrayCrayUsers">Users With No Cray Cray Animals</a></th></tr>
     	</table>
     </div>
 </body>

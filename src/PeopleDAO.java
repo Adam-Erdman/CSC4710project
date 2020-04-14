@@ -139,7 +139,8 @@ public class PeopleDAO extends HttpServlet {
 				"    animalID int not NULL, " + 
 				"    ownerID int not NULL, " + 
 				"    PRIMARY KEY (ReviewID), " + 
-				"    FOREIGN KEY (animalID) REFERENCES animals(animalID), " + 
+				"    FOREIGN KEY (animalID) REFERENCES animals(animalID)" +
+				"	 ON DELETE CASCADE, " + 
 				"    FOREIGN KEY (ownerID) REFERENCES animals(ownerID) " + 
 				"    ON DELETE CASCADE)";
 		
@@ -166,7 +167,7 @@ public class PeopleDAO extends HttpServlet {
 				"	username VARCHAR(50) NOT NULL, " + 
 				" 	ownerID INTEGER not NULL," +
 				"	PRIMARY KEY ( id )," +
-				"   UNIQUE (username, ownerID))"; 
+				"   UNIQUE (username, ownerID))";
 
 		//Makes sure there are less than 5 reviews per user
 		String reviewTrigger =
@@ -815,12 +816,10 @@ public class PeopleDAO extends HttpServlet {
     
     public List<Integer> getNotRidicAdorbs() throws SQLException {
     	List<Integer> notRidicAdorbsUsers = new ArrayList<Integer>();
-        String sql = "SELECT ownerID FROM Animals " + 
-        		"WHERE ownerID NOT IN( " + 
-        		"SELECT animalID from reviews " + 
+        String sql = "SELECT animalID from reviews " + 
         		"WHERE reviewScore = 4 " + 
         		"GROUP BY animalID " + 
-        		"HAVING count(AnimalID) >= 2)";
+        		"HAVING count(AnimalID) >= 2";
         
         connect_func();
         statement =  (Statement) connect.createStatement();
@@ -875,4 +874,23 @@ public class PeopleDAO extends HttpServlet {
         statement.close();
         return negativeReviewers;
     }
+    
+//    public List<Integer> getNoCrayCray() throws SQLException {
+//    	List<Integer> negativeReviewers = new ArrayList<Integer>();
+//        String sql = "SELECT ownerID FROM reviews " + 
+//	        		"GROUP BY ownerID " + 
+//	        		"HAVING MAX(ReviewScore)<= 2";
+//        connect_func();
+//        statement =  (Statement) connect.createStatement();
+//        
+//        ResultSet resultSet = statement.executeQuery(sql);
+//        while (resultSet.next()) {
+//            int ownerID = resultSet.getInt("ownerID");
+//            negativeReviewers.add(ownerID);
+//        }         
+//
+//        resultSet.close();
+//        statement.close();
+//        return negativeReviewers;
+//    }
 }

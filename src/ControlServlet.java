@@ -154,6 +154,15 @@ public class ControlServlet extends HttpServlet {
             case "/listCommonPets":
             	listCommonPets(request, response);
             	break;
+            case "/adoptionCrate":
+            	adoptionCrate(request, response);
+            	break;
+            case "/deleteSavedAnimals":
+            	deleteSavedAnimals(request, response);
+            	break;
+//            case "/noCrayCrayUsers":
+//            	noCrayCrayUsers(request, response);
+//            	break;
             default:   	
             	pageNotFound(request,response);
             	break;
@@ -289,9 +298,11 @@ public class ControlServlet extends HttpServlet {
 			 
 			List<Animals> savedAnimals = peopleDAO.getSavedAnimal(userID);
 			List<People> savedBreeders = peopleDAO.getSavedBreeder(userID);
-					
-			request.setAttribute("savedAnimals", savedAnimals );
-			request.setAttribute("savedBreeders", savedBreeders);
+			
+			if(savedAnimals.size() > 0) 
+				request.setAttribute("savedAnimals", savedAnimals);
+			if(savedBreeders.size() > 0)
+				request.setAttribute("savedBreeders", savedBreeders);
 			
 	    	RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
 	        dispatcher.forward(request, response);
@@ -436,7 +447,6 @@ public class ControlServlet extends HttpServlet {
     	if(authenticate(request, response)) {
 	        int animalID = Integer.parseInt(request.getParameter("animalID"));
 	        peopleDAO.deleteAnimal(animalID);
-	        response.sendRedirect("myAnimals"); 
     	}
     }
     
@@ -704,37 +714,83 @@ public class ControlServlet extends HttpServlet {
     
 	private void notRidicAdorbs(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        List<Integer> notRidicAdorbsUsers = peopleDAO.getNotRidicAdorbs();
-        List<People> users = new ArrayList<People>();
-        for (Integer userID : notRidicAdorbsUsers) {
-	        users.add(peopleDAO.getUser(userID));
+		if(authenticate(request, response)) {
+	        List<Integer> notRidicAdorbsUsers = peopleDAO.getNotRidicAdorbs();
+	        List<People> users = new ArrayList<People>();
+	        for (Integer userID : notRidicAdorbsUsers) {
+		        users.add(peopleDAO.getUser(userID));
+			}
+	        request.setAttribute("users", users);       
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("usersBySpecies.jsp");       
+	        dispatcher.forward(request, response);
 		}
-        request.setAttribute("users", users);       
-        RequestDispatcher dispatcher = request.getRequestDispatcher("usersBySpecies.jsp");       
-        dispatcher.forward(request, response);
     }
 	
 	private void notCrayCray(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        List<Integer> notRidicAdorbsUsers = peopleDAO.getNotCrayCray();
-        List<People> users = new ArrayList<People>();
-        for (Integer userID : notRidicAdorbsUsers) {
-	        users.add(peopleDAO.getUser(userID));
+		if(authenticate(request, response)) {
+	        List<Integer> notRidicAdorbsUsers = peopleDAO.getNotCrayCray();
+	        List<People> users = new ArrayList<People>();
+	        for (Integer userID : notRidicAdorbsUsers) {
+		        users.add(peopleDAO.getUser(userID));
+			}
+	        request.setAttribute("users", users);       
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("usersBySpecies.jsp");       
+	        dispatcher.forward(request, response);
 		}
-        request.setAttribute("users", users);       
-        RequestDispatcher dispatcher = request.getRequestDispatcher("usersBySpecies.jsp");       
-        dispatcher.forward(request, response);
     }
 	
 	private void negativeReviewers(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
-        List<Integer> negativeReviewers = peopleDAO.getNegativeReviewers();
-        List<People> users = new ArrayList<People>();
-        for (Integer userID : negativeReviewers) {
-	        users.add(peopleDAO.getUser(userID));
+		if(authenticate(request, response)) {
+	        List<Integer> negativeReviewers = peopleDAO.getNegativeReviewers();
+	        List<People> users = new ArrayList<People>();
+	        for (Integer userID : negativeReviewers) {
+		        users.add(peopleDAO.getUser(userID));
+			}
+	        request.setAttribute("users", users);       
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("usersBySpecies.jsp");       
+	        dispatcher.forward(request, response);
 		}
-        request.setAttribute("users", users);       
-        RequestDispatcher dispatcher = request.getRequestDispatcher("usersBySpecies.jsp");       
-        dispatcher.forward(request, response);
     }
+	
+	private void adoptionCrate(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+		if(authenticate(request, response)) {
+			int userID =  (Integer) (session.getAttribute("userID"));
+			List<Animals> savedAnimals = peopleDAO.getSavedAnimal(userID);
+			int totalPrice = 0;
+			for (Animals animal : savedAnimals) {
+				totalPrice += animal.adoptionPrice;
+			}
+			request.setAttribute("totalPrice", totalPrice);   
+		    request.setAttribute("savedAnimals", savedAnimals); 
+		    RequestDispatcher dispatcher = request.getRequestDispatcher("adoptionCrate.jsp");       
+	        dispatcher.forward(request, response);
+		}
+    }
+	
+	private void deleteSavedAnimals(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+		if(authenticate(request, response)) {
+			int userID =  (Integer) (session.getAttribute("userID"));
+			List<Animals> savedAnimals = peopleDAO.getSavedAnimal(userID);
+			for (Animals animal : savedAnimals) {
+				peopleDAO.deleteAnimal(animal.getId());
+			}
+			response.sendRedirect("welcome");
+		}
+    }
+	
+//	private void noCrayCrayUsers(HttpServletRequest request, HttpServletResponse response)
+//            throws SQLException, IOException, ServletException {
+//        List<Integer> negativeReviewers = peopleDAO.getNegativeReviewers();
+//        List<People> users = new ArrayList<People>();
+//        for (Integer userID : negativeReviewers) {
+//	        users.add(peopleDAO.getUser(userID));
+//		}
+//        request.setAttribute("users", users);       
+//        RequestDispatcher dispatcher = request.getRequestDispatcher("usersBySpecies.jsp");       
+//        dispatcher.forward(request, response);
+//    }
 }

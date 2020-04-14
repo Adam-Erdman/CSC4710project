@@ -1,5 +1,5 @@
 #ignore proejct settings
-.classpath
+~/.classpath
 .project
 .settings/*
 build/classes/*
