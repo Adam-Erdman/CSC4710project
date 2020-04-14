@@ -868,7 +868,7 @@ public class PeopleDAO extends HttpServlet {
         		"where ownerID NOT IN( " + 
         		"SELECT animalID from reviews " + 
         		"where reviewScore =4 " + 
-        		"group by animalID" + 
+        		"group by animalID " + 
         		"having count(AnimalID) >= 2)";
         
         connect_func();
@@ -897,7 +897,7 @@ public class PeopleDAO extends HttpServlet {
         
         ResultSet resultSet = statement.executeQuery(sql);
         while (resultSet.next()) {
-            int ownerID = resultSet.getInt("ownerID");
+            int ownerID = resultSet.getInt("id");
             notCrayCrayUsers.add(ownerID);
         }        
 

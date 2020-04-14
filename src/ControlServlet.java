@@ -619,7 +619,7 @@ public class ControlServlet extends HttpServlet {
         String review = request.getParameter("review");
         int reviewScore = Integer.parseInt(request.getParameter("reviewScore"));
         int animalID = Integer.parseInt(request.getParameter("animalID"));
-        int ownerID = Integer.parseInt(request.getParameter("ownerID"));
+        int ownerID = (Integer) session.getAttribute("userID");
 
         Review newReview = new Review(review, reviewScore, animalID, ownerID);
         
