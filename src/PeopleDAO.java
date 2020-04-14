@@ -108,21 +108,7 @@ public class PeopleDAO extends HttpServlet {
     
     public void wipe() throws SQLException{
 		connect_func();
-		
-		String deleteFavAnimal = "DROP TABLE IF EXISTS favAnimal";
-		String createFavAnimal = "CREATE TABLE IF NOT EXISTS favAnimal " +
-				"	(id INTEGER not NULL AUTO_INCREMENT, " +
-				"	username VARCHAR(50) NOT NULL, " + 
-				"   animalID int not NULL," + 
-				"	PRIMARY KEY ( id ))"; 
-		
-		String deleteFavBreeder = "DROP TABLE IF EXISTS favBreeder";
-		String createFavBreeder = "CREATE TABLE IF NOT EXISTS favBreeder " +
-				"	(id INTEGER not NULL AUTO_INCREMENT, " +
-				"	username VARCHAR(50) NOT NULL, " + 
-				" 	ownerID INTEGER not NULL," +
-				"	PRIMARY KEY ( id ))"; 
-		
+			
 		String deleteUserTable = "DROP TABLE IF EXISTS users";
 		String createUserTable = "CREATE TABLE IF NOT EXISTS users " +
 				"	(id INTEGER not NULL AUTO_INCREMENT, " +
@@ -165,6 +151,22 @@ public class PeopleDAO extends HttpServlet {
 				"    PRIMARY KEY (traitID)," + 
 				"    FOREIGN KEY (animalID) REFERENCES animals(animalID)" + 
 				"    ON DELETE CASCADE)" ;
+		
+		String deleteFavAnimal = "DROP TABLE IF EXISTS favAnimal";
+		String createFavAnimal = "CREATE TABLE IF NOT EXISTS favAnimal " +
+				"	(id INTEGER not NULL AUTO_INCREMENT, " +
+				"	username VARCHAR(50) NOT NULL, " + 
+				"   animalID int not NULL," + 
+				"	PRIMARY KEY ( id )," +
+				"   UNIQUE (username, animalID))"; 
+		
+		String deleteFavBreeder = "DROP TABLE IF EXISTS favBreeder";
+		String createFavBreeder = "CREATE TABLE IF NOT EXISTS favBreeder " +
+				"	(id INTEGER not NULL AUTO_INCREMENT, " +
+				"	username VARCHAR(50) NOT NULL, " + 
+				" 	ownerID INTEGER not NULL," +
+				"	PRIMARY KEY ( id )," +
+				"   UNIQUE (username, ownerID))"; 
 
 		//Makes sure there are less than 5 reviews per user
 		String reviewTrigger =
@@ -550,13 +552,13 @@ public class PeopleDAO extends HttpServlet {
     }
     
 
-    public boolean saveAnimal(int animalId, int ownerID) throws SQLException {
+    public boolean saveAnimal(int animalID, int userID) throws SQLException {
     	connect_func();         
        
     	String sql = "insert into favAnimal(username, animalID) values (?, ?)";
     	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-		preparedStatement.setInt(1, ownerID);
-		preparedStatement.setInt(2, animalId);
+		preparedStatement.setInt(1, userID);
+		preparedStatement.setInt(2, animalID);
 		
         boolean rowInserted = preparedStatement.executeUpdate() > 0;
         preparedStatement.close();
@@ -564,13 +566,42 @@ public class PeopleDAO extends HttpServlet {
         return rowInserted;    	
     }
     
-    public boolean saveBreeder(int ownerId, int userID) throws SQLException {
+    public boolean saveBreeder(int ownerID, int userID) throws SQLException {
     	connect_func();         
         
     	String sql = "insert into favbreeder(username, ownerID) values (?, ?)";
     	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
 		preparedStatement.setInt(1, userID);
-		preparedStatement.setInt(2, ownerId);
+		preparedStatement.setInt(2, ownerID);
+		
+        boolean rowInserted = preparedStatement.executeUpdate() > 0;
+        preparedStatement.close();
+
+        return rowInserted; 
+    }
+    
+    public boolean deleteFavoriteAnimal(int animalID, int userID) throws SQLException {
+    	connect_func();         
+       
+    	String sql = "DELETE FROM favanimal WHERE username = ? AND animalID = ?";
+    	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+		preparedStatement.setInt(1, userID);
+		preparedStatement.setInt(2, animalID);
+		
+        boolean rowInserted = preparedStatement.executeUpdate() > 0;
+        preparedStatement.close();
+
+        return rowInserted;    	
+    }
+    
+    public boolean deleteFavoriteBreeder(int ownerID, int userID) throws SQLException {
+    	connect_func();         
+        
+    	String sql = "DELETE FROM favbreeder WHERE username = ? AND ownerID = ?";
+
+    	preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+		preparedStatement.setInt(1, userID);
+		preparedStatement.setInt(2, ownerID);
 		
         boolean rowInserted = preparedStatement.executeUpdate() > 0;
         preparedStatement.close();
@@ -580,7 +611,8 @@ public class PeopleDAO extends HttpServlet {
     
     public List<Animals> getSavedAnimal(int userID) throws SQLException {
     	List<Animals> listAnimals = new ArrayList<Animals>();  
-        String sql = "SELECT * FROM project.animals, project.favanimal WHERE animals.animalID = favanimal.animalID AND ? = favanimal.username ";
+        String sql = "SELECT * FROM animals, favanimal " +
+        		     "WHERE animals.animalID = favanimal.animalID AND ? = favanimal.username ";
          
         connect_func();
          
@@ -589,7 +621,7 @@ public class PeopleDAO extends HttpServlet {
          
         ResultSet resultSet = preparedStatement.executeQuery();
          
-        if (resultSet.next()) {
+        while (resultSet.next()) {
         	int animalID = resultSet.getInt("animalID");
         	String name = resultSet.getString("name");
             String species = resultSet.getString("species");
@@ -601,41 +633,40 @@ public class PeopleDAO extends HttpServlet {
             
             listAnimals.add(animals);
         }
-        for (Animals animal : listAnimals) {
-			System.out.println(animal.toString());
-		}
+
         resultSet.close();
         preparedStatement.close();
         return listAnimals;
     }
         
-        public List<Animals> getSavedBreeder(int userID) throws SQLException {
-        	List<Animals> listAnimals = new ArrayList<Animals>(); 
-        	String sql = "SELECT * FROM project.animals, project.favbreeder WHERE animals.ownerID = favbreeder.ownerID AND ? = favbreeder.username ";
-             
-            connect_func();
-             
-            preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-            preparedStatement.setInt(1, userID);
-             
-            ResultSet resultSet = preparedStatement.executeQuery();
-             
-            if (resultSet.next()) {
-            	int animalID = resultSet.getInt("animalID");
-            	String name = resultSet.getString("name");
-                String species = resultSet.getString("species");
-                String birthdate = resultSet.getString("birthdate");
-                double adoptionPrice = resultSet.getDouble("adoptionPrice");
-                int ownerID = resultSet.getInt("ownerID");
-                 
-                Animals animals = new Animals(animalID, name, species, birthdate, adoptionPrice, ownerID);
-                
-                listAnimals.add(animals);
-            }
+    public List<People> getSavedBreeder(int userID) throws SQLException {
+    	List<People> users = new ArrayList<People>(); 
+    	String sql = "SELECT * FROM users, favbreeder " +
+    			     " WHERE users.id = favbreeder.ownerID AND ? = favbreeder.username";
          
-        resultSet.close();
-        preparedStatement.close();
-        return listAnimals;
+        connect_func();
+         
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setInt(1, userID);
+         
+        ResultSet resultSet = preparedStatement.executeQuery();
+         
+        while (resultSet.next()) {
+        	int id = resultSet.getInt("ownerID");
+        	String firstname = resultSet.getString("firstname");
+            String lastname = resultSet.getString("lastname");
+            String emailaddress = resultSet.getString("emailaddress");
+            String userpassword = resultSet.getString("userpassword");
+            String username = resultSet.getString("username");
+             
+            People people = new People(id, username, userpassword, firstname, lastname, emailaddress);
+            
+            users.add(people);
+        }
+     
+	    resultSet.close();
+	    preparedStatement.close();
+	    return users;
     }
 
     //Returns top 5 reviewers based on their count
@@ -669,7 +700,7 @@ public class PeopleDAO extends HttpServlet {
     //Select ratings 4 and 3
     public List<Review> getTopAnimals() throws SQLException {
     	List<Review> topAnimals = new ArrayList<Review>();
-        String sql = "SELECT * FROM reviews "+
+        String sql = "SELECT * FROM reviews " +
         		     "where reviewScore = 4 OR reviewScore = 3";
         
         connect_func();
@@ -691,6 +722,43 @@ public class PeopleDAO extends HttpServlet {
         resultSet.close();
         statement.close();
         return topAnimals;
-
+    }
+    
+    
+    public List<String> getSpeciesNames() throws SQLException {
+        List<String> traitNames= new ArrayList<String>();        
+        String sql = "SELECT DISTINCT species FROM animals";      
+        connect_func();      
+        statement =  (Statement) connect.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+                
+        while (resultSet.next()) {
+            traitNames.add(resultSet.getString("species"));
+        }        
+        
+        resultSet.close();
+        statement.close();         
+        disconnect();        
+        return traitNames;
+    }
+    
+    public List<Integer> getUserBySpecies(String species1, String species2) throws SQLException {
+        List<Integer> ownerIDs = new ArrayList<Integer>();
+        connect_func();  
+        String sql = "Select ownerID from animals " + 
+        		"where species in (?, ?) " + 
+        		"group by ownerID " + 
+        		"having count(ownerID) >= 2";       
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, species1);
+        preparedStatement.setString(2, species2);
+        
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+        	ownerIDs.add(resultSet.getInt("ownerID"));
+        }   
+        
+        resultSet.close();
+        return ownerIDs;
     }
 }

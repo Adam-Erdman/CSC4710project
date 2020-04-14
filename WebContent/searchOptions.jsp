@@ -8,22 +8,21 @@
 <body>
     <div align="center">
         <h1>Search Options</h1>
-           <h2>
-		    <a href="AnimalListFormDropDown">Search Animals by Trait</a>
-            &nbsp;&nbsp;&nbsp;
-            <a href="mostExpensiveAnimalsForm">Most Expensive by Trait</a>
-            &nbsp;&nbsp;&nbsp; 
-            <a href="topAnimals">List Highest Rated Animals</a>
-            &nbsp;&nbsp;&nbsp;
-			<a href="topReviewers">List Top Reviews</a>
-            &nbsp;&nbsp;&nbsp;
-            <a href="AnimalList">List All Animals</a>
-            &nbsp;&nbsp;&nbsp;
-            <a href="welcome">Home</a>
-            &nbsp;&nbsp;&nbsp;
-            <a href="logout">Logout</a>
-            &nbsp;&nbsp;&nbsp;
-        </h2>
+       	<h2>	
+        	<a href="welcome">Home</a>
+        	 &nbsp;&nbsp;&nbsp;
+        	<a href="logout">Logout</a>
+	    </h2>
+	    
+	     <table border="1" cellpadding="5">
+	        <tr><th><h2>Select a Search Option</h2></th><tr>
+	    	<tr><th><a href="mostExpensiveAnimalsForm">Most Expensive by Trait</a><br></th></tr>
+	    	<tr><th><a href="topAnimals">List Highest Rated Animals</a><br></th></tr>
+	    	<tr><th><a href="topReviewers">List Top Reviews</a><br></th></tr>
+	    	<tr><th><a href="topReviewers">List Top Reviews</a><br></th></tr>
+	    	<tr><th><a href="listUserBySpecies">Find Breeder listing Specific Species</a><br></th></tr>
+	    	<tr><th><a href="AnimalList">List All Animals</a></th></tr>
+    	</table>
     </div>
 </body>
 </html>
