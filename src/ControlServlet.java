@@ -266,24 +266,18 @@ public class ControlServlet extends HttpServlet {
 	private void welcomeForm(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
 		session = request.getSession();
-		
-		 int userID =  (Integer) (session.getAttribute("userID"));
+		int userID =  (Integer) (session.getAttribute("userID"));
 		 
 		List<Animals> savedAnimals = peopleDAO.getSavedAnimal(userID);
 		List<Animals> savedBreeders = peopleDAO.getSavedBreeder(userID);
-		
-		for (Animals animal : savedAnimals) {
-			System.out.println(animal.toString());
-		}
-		
-		 request.setAttribute("savedAnimals", savedAnimals );
-		 request.setAttribute("savedBreeders", savedBreeders);
+				
+		request.setAttribute("savedAnimals", savedAnimals );
+		request.setAttribute("savedBreeders", savedBreeders);
 		 
 		if(authenticate(request,response)) {
-			
-	    	System.out.println("logged in with " + session.getAttribute("userName"));
 	    	RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
 	        dispatcher.forward(request, response);
+	        System.out.println("logged in with " + session.getAttribute("userName"));
 		}
 	}
 
@@ -371,11 +365,9 @@ public class ControlServlet extends HttpServlet {
     	if(authenticate(request, response)) {
 	        int animalID = Integer.parseInt(request.getParameter("animalID"));
 	        int userID =  (Integer) (session.getAttribute("userID"));
-	        //People people = new People(id);
 	        peopleDAO.saveAnimal(animalID, userID);
-	        RequestDispatcher dispatcher = request.getRequestDispatcher("welcome");
-	    	dispatcher.forward(request, response); 
-    	}
+	        response.sendRedirect("welcome");
+	    }
     }
     
     //owner ID is the breeder of the pet

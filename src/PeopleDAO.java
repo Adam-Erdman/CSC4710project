@@ -580,7 +580,8 @@ public class PeopleDAO extends HttpServlet {
     
     public List<Animals> getSavedAnimal(int userID) throws SQLException {
     	List<Animals> listAnimals = new ArrayList<Animals>();  
-        String sql = "SELECT * FROM project.animals, project.favanimal WHERE animals.animalID = favanimal.animalID AND ? = favanimal.username ";
+        String sql = "SELECT * FROM animals, favanimal " +
+        		     "WHERE animals.animalID = favanimal.animalID AND ? = favanimal.username ";
          
         connect_func();
          
@@ -589,7 +590,7 @@ public class PeopleDAO extends HttpServlet {
          
         ResultSet resultSet = preparedStatement.executeQuery();
          
-        if (resultSet.next()) {
+        while (resultSet.next()) {
         	int animalID = resultSet.getInt("animalID");
         	String name = resultSet.getString("name");
             String species = resultSet.getString("species");
@@ -602,38 +603,43 @@ public class PeopleDAO extends HttpServlet {
             listAnimals.add(animals);
         }
         
+        for (Animals animals : listAnimals) {
+			System.out.println(animals.toString());
+		}
+        
         resultSet.close();
         preparedStatement.close();
         return listAnimals;
     }
         
-        public List<Animals> getSavedBreeder(int userID) throws SQLException {
-        	List<Animals> listAnimals = new ArrayList<Animals>(); 
-        	String sql = "SELECT * FROM project.animals, project.favbreeder WHERE animals.ownerID = favbreeder.ownerID AND ? = favbreeder.username ";
-             
-            connect_func();
-             
-            preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
-            preparedStatement.setInt(1, userID);
-             
-            ResultSet resultSet = preparedStatement.executeQuery();
-             
-            if (resultSet.next()) {
-            	int animalID = resultSet.getInt("animalID");
-            	String name = resultSet.getString("name");
-                String species = resultSet.getString("species");
-                String birthdate = resultSet.getString("birthdate");
-                double adoptionPrice = resultSet.getDouble("adoptionPrice");
-                int ownerID = resultSet.getInt("ownerID");
-                 
-                Animals animals = new Animals(animalID, name, species, birthdate, adoptionPrice, ownerID);
-                
-                listAnimals.add(animals);
-            }
+    public List<Animals> getSavedBreeder(int userID) throws SQLException {
+    	List<Animals> listAnimals = new ArrayList<Animals>(); 
+    	String sql = "SELECT * FROM project.animals, project.favbreeder " +
+    			     "WHERE animals.ownerID = favbreeder.ownerID AND ? = favbreeder.username ";
          
-        resultSet.close();
-        preparedStatement.close();
-        return listAnimals;
+        connect_func();
+         
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setInt(1, userID);
+         
+        ResultSet resultSet = preparedStatement.executeQuery();
+         
+        while (resultSet.next()) {
+        	int animalID = resultSet.getInt("animalID");
+        	String name = resultSet.getString("name");
+            String species = resultSet.getString("species");
+            String birthdate = resultSet.getString("birthdate");
+            double adoptionPrice = resultSet.getDouble("adoptionPrice");
+            int ownerID = resultSet.getInt("ownerID");
+             
+            Animals animals = new Animals(animalID, name, species, birthdate, adoptionPrice, ownerID);
+            
+            listAnimals.add(animals);
+        }
+     
+	    resultSet.close();
+	    preparedStatement.close();
+	    return listAnimals;
     }
 
     //Returns top 5 reviewers based on their count
