@@ -170,14 +170,14 @@ public class PeopleDAO extends HttpServlet {
 				"   UNIQUE (username, ownerID))";
 
 		//Makes sure there are less than 5 reviews per user
-		String reviewTrigger =
-				"CREATE TRIGGER lt5Reviews BEFORE INSERT on reviews" + 
+		String animalTrigger = 
+				"CREATE TRIGGER lt5Animals BEFORE INSERT on animals" + 
 				"	FOR EACH ROW BEGIN" + 
-				"    SET @reviewCount = 0;" + 
-				"	select count(*) INTO @reviewCount from reviews where ownerID = NEW.ownerID;" + 
-				"    IF @reviewCount >= 5 THEN" + 
+				"    SET @animalCount = 0; " + 
+				"	select count(*) INTO @animalCount from animals where ownerID = NEW.ownerID;" + 
+				"    IF @animalCount >= 5 THEN" + 
 				"		 SIGNAL SQLSTATE '45000'" + 
-				"		   SET MESSAGE_TEXT = 'Cannot insert more than 5 reivews', MYSQL_ERRNO = 1000;" + 
+				"		   SET MESSAGE_TEXT = 'Cannot insert more than 5 animals', MYSQL_ERRNO = 1000;" + 
 				"	END IF;" + 
 				"END";
 	
@@ -194,7 +194,7 @@ public class PeopleDAO extends HttpServlet {
 	    statement.executeUpdate(createReviewTable);
 	    statement.executeUpdate(createFavAnimal);
 	    statement.executeUpdate(createFavBreeder);
-	    statement.executeUpdate(reviewTrigger);
+	    statement.executeUpdate(animalTrigger);
 	    
 	    statement.close();
 	}	
