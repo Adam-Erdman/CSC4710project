@@ -601,7 +601,9 @@ public class PeopleDAO extends HttpServlet {
             
             listAnimals.add(animals);
         }
-        
+        for (Animals animal : listAnimals) {
+			System.out.println(animal.toString());
+		}
         resultSet.close();
         preparedStatement.close();
         return listAnimals;
