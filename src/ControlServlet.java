@@ -240,6 +240,14 @@ public class ControlServlet extends HttpServlet {
     		Review review= new Review(reviewText, reviewScore, animalID, ownerID);
     		peopleDAO.insertReview(review);
     	}
+     	
+
+    	//Create traits
+     	for(int i = 1; i < 5; i++) {
+    		int userID = i;
+    		int animalID = 1;
+    		peopleDAO.saveAnimal(animalID, userID);
+    	}
 
      	//Insert 2 traits in the trait table per animal
      	//Second trait is a random one between 1-14

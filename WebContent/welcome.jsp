@@ -30,7 +30,7 @@
 		            <tr>
 		                <th>Pet Name</th>
 		                <th>Species</th>
-		                <th>Owner</th>
+<!-- 		                <th>Owner</th> -->
 		                <th>Adoption Price</th>
 		                <th>Delete Animal</th>
 		            </tr>           
@@ -38,7 +38,7 @@
 		              <tr>
 		                  <td><c:out value="${animal.getName()}" /></td>
 		                  <td><c:out value="${animal.getSpecies()}" /></td>
-		                  <td><c:out value="${animal.getOwner()}" /></td>      
+<%-- 		                  <td><c:out value="${animal.getOwner()}" /></td>       --%>
 		                  <td><c:out value="${animal.getAdoptionPrice()}" /></td>       
 		                  <td>
 		                      <a href="deleteFavoriteAnimal?animalID=<c:out value='${animal.getId()}'/>">Delete</a>
