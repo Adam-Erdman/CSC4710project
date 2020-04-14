@@ -151,6 +151,9 @@ public class ControlServlet extends HttpServlet {
             case "/negativeReviewers":
             	negativeReviewers(request, response);
             	break;
+            case "/listCommonPets":
+            	listCommonPets(request, response);
+            	break;
             default:   	
             	pageNotFound(request,response);
             	break;
@@ -617,6 +620,23 @@ public class ControlServlet extends HttpServlet {
 	        Comparator<Animals> comparator = Comparator.comparing(a -> a.getAdoptionPrice());
 	        searchByTrait.sort(comparator.reversed());
 	        animalListForm(request,response,searchByTrait);
+    	}
+    }
+    
+    private void listCommonPets(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+    	if(authenticate(request, response)) {
+    		int userID =  (Integer) (session.getAttribute("userID"));
+			 
+			List<Animals> commonPets = peopleDAO.getCommonPets(userID);
+			
+					
+			request.setAttribute("commonPets", commonPets );
+			
+			
+	    	RequestDispatcher dispatcher = request.getRequestDispatcher("listCommonPets.jsp");
+	        dispatcher.forward(request, response);
+	        System.out.println("logged in with " + session.getAttribute("userName"));
     	}
     }
     

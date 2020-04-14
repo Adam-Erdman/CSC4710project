@@ -668,6 +668,52 @@ public class PeopleDAO extends HttpServlet {
 	    preparedStatement.close();
 	    return users;
     }
+    public List<Animals> getCommonPets(int userID) throws SQLException {
+    	List<Animals> listAnimals = new ArrayList<Animals>();  
+        String sql = "Select" + 
+        		"  *" + 
+        		"From" + 
+        		"  animals" + 
+        		"  WHERE" + 
+        		"  animals.ownerID <> ? AND" + 
+        		"  animals.animalID IN (" + 
+        		"    SELECT" + 
+        		"      animals.animalID" + 
+        		"    FROM" + 
+        		"      animals," + 
+        		"      favanimal" + 
+        		"    WHERE" + 
+        		"      animals.animalID = favanimal.animalID" + 
+        		"      AND ? = favanimal.username" + 
+        		"  )";
+
+         
+        connect_func();
+         
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setInt(1, userID);
+        preparedStatement.setInt(2, userID);
+         
+        ResultSet resultSet = preparedStatement.executeQuery();
+         
+        while (resultSet.next()) {
+        	int animalID = resultSet.getInt("animalID");
+        	String name = resultSet.getString("name");
+            String species = resultSet.getString("species");
+            String birthdate = resultSet.getString("birthdate");
+            double adoptionPrice = resultSet.getDouble("adoptionPrice");
+            int ownerID = resultSet.getInt("ownerID");
+             
+            Animals animals = new Animals(animalID, name, species, birthdate, adoptionPrice, ownerID);
+            
+            listAnimals.add(animals);
+        }
+
+        resultSet.close();
+        preparedStatement.close();
+        return listAnimals;
+    }
+
 
     //Returns top 5 reviewers based on their count
     public List<Review> getTopReviewers() throws SQLException {
