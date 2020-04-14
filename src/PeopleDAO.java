@@ -737,7 +737,7 @@ public class PeopleDAO extends HttpServlet {
         		"	animalID not in(" + 
         		"    select animalID" + 
         		"    from reviews" + 
-        		"    where reviewscore <=1))";
+        		"    where reviewscore =1))";
 
          
         connect_func();
@@ -864,12 +864,13 @@ public class PeopleDAO extends HttpServlet {
     
     public List<Integer> getNotRidicAdorbs() throws SQLException {
     	List<Integer> notRidicAdorbsUsers = new ArrayList<Integer>();
-        String sql = "SELECT DISTINCT ownerID From reviews " + 
-        		"where ownerID NOT IN( " + 
-        		"SELECT animalID from reviews " + 
-        		"where reviewScore =4 " + 
-        		"group by animalID " + 
-        		"having count(AnimalID) >= 2)";
+        
+        String sql = "SELECT distinct ownerID From animals " + 
+        		" where ownerID Not IN(" + 
+        		" Select ownerID from reviews" + 
+        		" where reviewScore =4" + 
+        		" group by ownerID" + 
+        		" having count(reviewScore) >= 2)";
         
         connect_func();
         statement =  (Statement) connect.createStatement();
@@ -887,10 +888,10 @@ public class PeopleDAO extends HttpServlet {
     
     public List<Integer> getNotCrayCray() throws SQLException {
     	List<Integer> notCrayCrayUsers = new ArrayList<Integer>();
-        String sql = "SELECT * FROM users " + 
-	        		"WHERE id NOT IN(" + 
-	        		"SELECT animalID FROM reviews " + 
-	        		"WHERE reviewScore = 1);";
+        String sql = " SELECT * FROM users " + 
+	        		" WHERE id NOT IN( " + 
+	        		" SELECT ownerID FROM reviews " + 
+	        		" WHERE reviewScore = 1)";
         
         connect_func();
         statement =  (Statement) connect.createStatement();
