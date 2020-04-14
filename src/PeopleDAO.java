@@ -190,11 +190,11 @@ public class PeopleDAO extends HttpServlet {
 	    statement.executeUpdate(deleteFavBreeder);
 	    statement.executeUpdate(createUserTable);
 	    statement.executeUpdate(createAnimalTable); //added for part 2 -ae
+	    statement.executeUpdate(animalTrigger);
 	    statement.executeUpdate(createTraitTable);
 	    statement.executeUpdate(createReviewTable);
 	    statement.executeUpdate(createFavAnimal);
 	    statement.executeUpdate(createFavBreeder);
-	    statement.executeUpdate(animalTrigger);
 	    
 	    statement.close();
 	}	
@@ -864,10 +864,12 @@ public class PeopleDAO extends HttpServlet {
     
     public List<Integer> getNotRidicAdorbs() throws SQLException {
     	List<Integer> notRidicAdorbsUsers = new ArrayList<Integer>();
-        String sql = "SELECT animalID from reviews " + 
-        		"WHERE reviewScore = 4 " + 
-        		"GROUP BY animalID " + 
-        		"HAVING count(AnimalID) >= 2";
+        String sql = "SELECT DISTINCT ownerID From reviews " + 
+        		"where ownerID NOT IN( " + 
+        		"SELECT animalID from reviews " + 
+        		"where reviewScore =4 " + 
+        		"group by animalID" + 
+        		"having count(AnimalID) >= 2)";
         
         connect_func();
         statement =  (Statement) connect.createStatement();
