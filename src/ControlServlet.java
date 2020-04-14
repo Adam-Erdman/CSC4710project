@@ -145,6 +145,9 @@ public class ControlServlet extends HttpServlet {
             case "/notRidicAdorbs":
             	notRidicAdorbs(request, response);
             	break;
+            case "/notCrayCray":
+            	notCrayCray(request, response);
+            	break;
             default:   	
             	pageNotFound(request,response);
             	break;
@@ -676,7 +679,6 @@ public class ControlServlet extends HttpServlet {
     	}
     }
     
-    
 	private void notRidicAdorbs(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
         List<Integer> notRidicAdorbsUsers = peopleDAO.getNotRidicAdorbs();
@@ -689,4 +691,15 @@ public class ControlServlet extends HttpServlet {
         dispatcher.forward(request, response);
     }
 	
+	private void notCrayCray(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        List<Integer> notRidicAdorbsUsers = peopleDAO.getNotCrayCray();
+        List<People> users = new ArrayList<People>();
+        for (Integer userID : notRidicAdorbsUsers) {
+	        users.add(peopleDAO.getUser(userID));
+		}
+        request.setAttribute("users", users);       
+        RequestDispatcher dispatcher = request.getRequestDispatcher("usersBySpecies.jsp");       
+        dispatcher.forward(request, response);
+    }
 }

@@ -10,13 +10,11 @@
     <center>
         <h1>People Management</h1>
         <h2>
-            <a href="newUser">Add New People</a>
-           		&nbsp;&nbsp;&nbsp;
-            <a href="listPeople">List All People</a>
-            	&nbsp;&nbsp;&nbsp;
-            <a href="initDB">Initialize DB</a>
-             &nbsp;&nbsp;&nbsp;
-            <a href="welcome">Home</a>
+        	<a href="AnimalList">List all animals</a>
+            &nbsp;&nbsp;&nbsp;
+            <a href="searchOptions.jsp">Search Options</a>
+            &nbsp;&nbsp;&nbsp;
+           <a href="welcome">Home</a>
         </h2>
     </center>
     <div align="center">

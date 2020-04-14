@@ -784,4 +784,25 @@ public class PeopleDAO extends HttpServlet {
         statement.close();
         return notRidicAdorbsUsers;
     }
+    
+    public List<Integer> getNotCrayCray() throws SQLException {
+    	List<Integer> notRidicAdorbsUsers = new ArrayList<Integer>();
+        String sql = "SELECT ownerID FROM Animals " + 
+        		"WHERE ownerID NOT IN(" + 
+        		"SELECT animalID FROM reviews " + 
+        		"WHERE reviewScore = 1);";
+        
+        connect_func();
+        statement =  (Statement) connect.createStatement();
+        
+        ResultSet resultSet = statement.executeQuery(sql);
+        while (resultSet.next()) {
+            int ownerID = resultSet.getInt("ownerID");
+            notRidicAdorbsUsers.add(ownerID);
+        }        
+
+        resultSet.close();
+        statement.close();
+        return notRidicAdorbsUsers;
+    }
 }
