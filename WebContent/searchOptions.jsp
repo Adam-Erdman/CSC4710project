@@ -13,14 +13,14 @@
         	 &nbsp;&nbsp;&nbsp;
         	<a href="logout">Logout</a>
 	    </h2>
-	    
+
 	     <table border="1" cellpadding="5">
 	        <tr><th><h2>Select a Search Option</h2></th><tr>
-	    	<tr><th><a href="mostExpensiveAnimalsForm">Most Expensive by Trait</a><br></th></tr>
-	    	<tr><th><a href="topAnimals">List Highest Rated Animals</a><br></th></tr>
-	    	<tr><th><a href="topReviewers">List Top Reviews</a><br></th></tr>
-	    	<tr><th><a href="topReviewers">List Top Reviews</a><br></th></tr>
-	    	<tr><th><a href="listUserBySpecies">Find Breeder listing Specific Species</a><br></th></tr>
+	    	<tr><th><a href="mostExpensiveAnimalsForm">Most Expensive by Trait</a></th></tr>
+	    	<tr><th><a href="topAnimals">List Highest Rated Animals</a></th></tr>
+	    	<tr><th><a href="topReviewers">List Top Reviews</a></th></tr>
+	    	<tr><th><a href="listUserBySpecies">Find Breeder listing Specific Species</a></th></tr>
+	    	<tr><th><a href="notRidicAdorbs">Breeders without Ridic Adorbs Reviews</a></th></tr>
 	    	<tr><th><a href="AnimalList">List All Animals</a></th></tr>
     	</table>
     </div>

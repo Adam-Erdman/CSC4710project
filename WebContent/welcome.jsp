@@ -6,7 +6,7 @@
     <title>Welcome!</title>
 </head>
 <body>
-    <div align="center">
+   	<div align="center">
         <h1>Welcome ${firstName}!</h1>
            <h2>
            <a href="myAnimals">My animals</a>
@@ -24,31 +24,28 @@
             <a href="logout">Logout</a>
             &nbsp;&nbsp;&nbsp;
         </h2>
-        
-    </div>
-    <div align ="center">
-     <table border="1" cellpadding="5">
-            <caption><h2>Favorite Pets</h2></caption>
-            <tr>
-                <th>Pet Name</th>
-                <th>Species</th>
-                <th>Owner</th>
-                <th>Adoption Price</th>
-                <th>Delete Animal</th>
-            </tr>           
-          <c:forEach items="${savedAnimals}" var="animal">
-              <tr>
-                  <td><c:out value="${animal.getName()}" /></td>
-                  <td><c:out value="${animal.getSpecies()}" /></td>
-                  <td><c:out value="${animal.getOwner()}" /></td>      
-                  <td><c:out value="${animal.getAdoptionPrice()}" /></td>       
-                  <td>
-                      <a href="deleteFavoriteAnimal?animalID=<c:out value='${animal.getId()}'/>">Delete</a>
-                  </td>                    
-              </tr>
-          </c:forEach>
-     </table>
-         <table border="1" cellpadding="5">
+	     <table border="1" cellpadding="5">
+	            <caption><h2>Favorite Pets</h2></caption>
+	            <tr>
+	                <th>Pet Name</th>
+	                <th>Species</th>
+	                <th>Owner</th>
+	                <th>Adoption Price</th>
+	                <th>Delete Animal</th>
+	            </tr>           
+	          <c:forEach items="${savedAnimals}" var="animal">
+	              <tr>
+	                  <td><c:out value="${animal.getName()}" /></td>
+	                  <td><c:out value="${animal.getSpecies()}" /></td>
+	                  <td><c:out value="${animal.getOwner()}" /></td>      
+	                  <td><c:out value="${animal.getAdoptionPrice()}" /></td>       
+	                  <td>
+	                      <a href="deleteFavoriteAnimal?animalID=<c:out value='${animal.getId()}'/>">Delete</a>
+	                  </td>                    
+	              </tr>
+	          </c:forEach>
+	     </table>
+	     <table border="1" cellpadding="5">
             <caption><h2>Favorite Breeders</h2></caption>
             <tr>
                 <th>Username</th>
@@ -56,8 +53,8 @@
                 <th>Last Name</th>
                 <th>Email</th>
                 <th>Delete Breeder</th>
-            </tr>           
-          <c:forEach items="${savedBreeders}" var="breeder">
+            </tr> 
+          	<c:forEach items="${savedBreeders}" var="breeder">
                 <tr>
                     <td><c:out value="${breeder.getUserName()}" /></td>
                     <td><c:out value="${breeder.getFirstName()}" /></td>
@@ -68,7 +65,7 @@
                     </td>             
                 </tr>
             </c:forEach>
-        </table>
+       	</table>
     </div>
 </body>
 </html>

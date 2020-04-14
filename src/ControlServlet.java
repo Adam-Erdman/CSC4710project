@@ -142,6 +142,9 @@ public class ControlServlet extends HttpServlet {
             case "/deleteFavoriteBreeder":
             	deleteFavoriteBreeder(request, response);
             	break;
+            case "/notRidicAdorbs":
+            	notRidicAdorbs(request, response);
+            	break;
             default:   	
             	pageNotFound(request,response);
             	break;
@@ -672,4 +675,18 @@ public class ControlServlet extends HttpServlet {
 	        dispatcher.forward(request, response);
     	}
     }
+    
+    
+	private void notRidicAdorbs(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+        List<Integer> notRidicAdorbsUsers = peopleDAO.getNotRidicAdorbs();
+        List<People> users = new ArrayList<People>();
+        for (Integer userID : notRidicAdorbsUsers) {
+	        users.add(peopleDAO.getUser(userID));
+		}
+        request.setAttribute("users", users);       
+        RequestDispatcher dispatcher = request.getRequestDispatcher("usersBySpecies.jsp");       
+        dispatcher.forward(request, response);
+    }
+	
 }
