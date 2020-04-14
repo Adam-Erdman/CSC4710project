@@ -478,18 +478,23 @@ public class ControlServlet extends HttpServlet {
 	        String traits = request.getParameter("traits");
 	        Double adoptionPrice = Double.parseDouble(request.getParameter("adoptionPrice"));
 	        int ownerID =  (Integer) (session.getAttribute("userID"));
-
 	        Animals newAnimals = new Animals(name, species, birthdate, adoptionPrice, ownerID);
-	        int animalID = peopleDAO.insertAnimal(newAnimals);
-
-	        //Push each trait into the trait table 
-	        List<String> traitsList = Arrays.asList(traits.split(","));
-	        for (String traitText : traitsList) {
-	        	traitText = traitText.replaceAll("\\s+",""); // Remove all whitespace
-	        	Trait trait = new Trait(animalID, traitText);
-				peopleDAO.insertTrait(trait);
-			}
-	        response.sendRedirect("AnimalList");
+	        
+	        try {
+		        int animalID = peopleDAO.insertAnimal(newAnimals);
+		        //Push each trait into the trait table 
+		        List<String> traitsList = Arrays.asList(traits.split(","));
+		        for (String traitText : traitsList) {
+		        	traitText = traitText.replaceAll("\\s+",""); // Remove all whitespace
+		        	Trait trait = new Trait(animalID, traitText);
+					peopleDAO.insertTrait(trait);
+				}
+		        response.sendRedirect("AnimalList");
+	        }catch(SQLException e) {
+	        	RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalList");
+	        	request.setAttribute("mt5reviews", true);
+	 		    dispatcher.forward(request, response);
+	        }
     	}
     }
 
@@ -609,16 +614,9 @@ public class ControlServlet extends HttpServlet {
         int ownerID = Integer.parseInt(request.getParameter("ownerID"));
 
         Review newReview = new Review(review, reviewScore, animalID, ownerID);
-
-        //See if the user posted more than 5 reviews
-        try {
-        	peopleDAO.insertReview(newReview);     
-        	 response.sendRedirect("AnimalList");
-        }catch(SQLException e) {
-        	RequestDispatcher dispatcher = request.getRequestDispatcher("AnimalList");
-        	request.setAttribute("mt5reviews", true);
- 		    dispatcher.forward(request, response);
-        }
+        
+    	peopleDAO.insertReview(newReview);     
+    	response.sendRedirect("AnimalList");
     }    
 
     private void mostExpensiveAnimalsForm(HttpServletRequest request, HttpServletResponse response)

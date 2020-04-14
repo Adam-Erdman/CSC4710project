@@ -20,7 +20,7 @@
     </center>
     <div align="center">
         <c:if test="${mt5reviews}">
-        	<h2>Cannot post more than five reviews!</h2>
+        	<h2>Cannot post more than five animals!</h2>
         </c:if>
         <table border="1" cellpadding="5">
             <caption><h2>List of Pets</h2></caption>
