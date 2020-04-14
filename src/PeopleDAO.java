@@ -609,7 +609,7 @@ public class PeopleDAO extends HttpServlet {
     //Select ratings 4 and 3
     public List<Review> getTopAnimals() throws SQLException {
     	List<Review> topAnimals = new ArrayList<Review>();
-        String sql = "SELECT * FROM reviews "+
+        String sql = "SELECT * FROM reviews " +
         		     "where reviewScore = 4 OR reviewScore = 3";
         
         connect_func();
@@ -631,6 +631,43 @@ public class PeopleDAO extends HttpServlet {
         resultSet.close();
         statement.close();
         return topAnimals;
-
+    }
+    
+    
+    public List<String> getSpeciesNames() throws SQLException {
+        List<String> traitNames= new ArrayList<String>();        
+        String sql = "SELECT DISTINCT species FROM animals";      
+        connect_func();      
+        statement =  (Statement) connect.createStatement();
+        ResultSet resultSet = statement.executeQuery(sql);
+                
+        while (resultSet.next()) {
+            traitNames.add(resultSet.getString("species"));
+        }        
+        
+        resultSet.close();
+        statement.close();         
+        disconnect();        
+        return traitNames;
+    }
+    
+    public List<Integer> getUserBySpecies(String species1, String species2) throws SQLException {
+        List<Integer> ownerIDs = new ArrayList<Integer>();
+        connect_func();  
+        String sql = "Select ownerID from animals " + 
+        		"where species in (?, ?) " + 
+        		"group by ownerID " + 
+        		"having count(ownerID) >= 2";       
+        preparedStatement = (PreparedStatement) connect.prepareStatement(sql);
+        preparedStatement.setString(1, species1);
+        preparedStatement.setString(2, species2);
+        
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while (resultSet.next()) {
+        	ownerIDs.add(resultSet.getInt("ownerID"));
+        }   
+        
+        resultSet.close();
+        return ownerIDs;
     }
 }

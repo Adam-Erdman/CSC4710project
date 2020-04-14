@@ -130,6 +130,12 @@ public class ControlServlet extends HttpServlet {
             case "/topAnimals":
             	topAnimals(request,response);
             	break;
+            case "/listUserBySpecies":
+            	listUserBySpecies(request, response);
+            	break;
+            case "/usersBySpecies":
+            	searchUserBySpecies(request, response);
+            	break;
             default:   	
             	pageNotFound(request,response);
             	break;
@@ -465,7 +471,7 @@ public class ControlServlet extends HttpServlet {
 	        dispatcher.forward(request, response);
     	}
     }
-    
+        
     private void searchByTrait(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
     	if(authenticate(request, response)) {
@@ -598,5 +604,32 @@ public class ControlServlet extends HttpServlet {
         request.setAttribute("reviewScores", reviewScores);   
         animalListForm(request,response, topAnimals);
     }
- 
+	
+    //Show two traits the user can select from to list species who have posted both species 
+    private void listUserBySpecies(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+    	if(authenticate(request, response)) {
+	        List<String> speciesName = peopleDAO.getSpeciesNames();
+	        java.util.Collections.sort(speciesName);
+	        request.setAttribute("speciesName", speciesName);       
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("speciesSearchForm.jsp");       
+	        dispatcher.forward(request, response);
+    	}
+    }
+    
+    private void searchUserBySpecies(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+    	if(authenticate(request, response)) {
+	        String species1 = request.getParameter("species1");
+	        String species2 = request.getParameter("species2");
+	        List<Integer> searchByTrait = peopleDAO.getUserBySpecies(species1, species2);
+	        List<People> users = new ArrayList<People>();
+	        for (Integer userID : searchByTrait) {
+		        users.add(peopleDAO.getUser(userID));
+			}
+	        request.setAttribute("users", users);       
+	        RequestDispatcher dispatcher = request.getRequestDispatcher("usersBySpecies.jsp");       
+	        dispatcher.forward(request, response);
+    	}
+    }
 }
