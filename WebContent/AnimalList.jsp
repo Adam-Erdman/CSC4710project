@@ -62,15 +62,14 @@
                     	<a href="createReview?animalID=<c:out value='${animalListForm[i].getId()}'/>">Create Review</a>
                     </td>
                     <td>
-                     <form action="saveAnimal?animalID=${animalListForm[i].getId()}&ownerID=${animalListForm[i].getOwner()}" method="post">
-                    <input type="submit" value="Favorite" />
-                     </form>
+	                    <form action="saveAnimal?animalID=${animalListForm[i].getId()}&ownerID=${animalListForm[i].getOwner()}" method="post">
+	                    	<input type="submit" value="Favorite" />
+	                    </form>
                     </td>
-                    
-                     <td>
-                     <form action="saveBreeder?animalID=${animalListForm[i].getId()}&ownerID=${animalListForm[i].getOwner()}" method="post">
-                    <input type="submit" value="Favorite" NAME="username" />
-                     </form>
+                    <td>
+	                    <form action="saveBreeder?animalID=${animalListForm[i].getId()}&ownerID=${animalListForm[i].getOwner()}" method="post">
+	                   		<input type="submit" value="Favorite" NAME="username" />
+	                    </form>
                     </td>
                 </tr>
             </c:forEach>

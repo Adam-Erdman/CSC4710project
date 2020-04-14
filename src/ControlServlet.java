@@ -136,6 +136,12 @@ public class ControlServlet extends HttpServlet {
             case "/usersBySpecies":
             	searchUserBySpecies(request, response);
             	break;
+            case "/deleteFavoriteAnimal":
+            	deleteFavoriteAnimal(request, response);
+            	break;
+            case "/deleteFavoriteBreeder":
+            	deleteFavoriteBreeder(request, response);
+            	break;
             default:   	
             	pageNotFound(request,response);
             	break;
@@ -266,15 +272,15 @@ public class ControlServlet extends HttpServlet {
 	private void welcomeForm(HttpServletRequest request, HttpServletResponse response)
 			throws SQLException, ServletException, IOException {
 		session = request.getSession();
-		int userID =  (Integer) (session.getAttribute("userID"));
-		 
-		List<Animals> savedAnimals = peopleDAO.getSavedAnimal(userID);
-		List<Animals> savedBreeders = peopleDAO.getSavedBreeder(userID);
-				
-		request.setAttribute("savedAnimals", savedAnimals );
-		request.setAttribute("savedBreeders", savedBreeders);
-		 
 		if(authenticate(request,response)) {
+			int userID =  (Integer) (session.getAttribute("userID"));
+			 
+			List<Animals> savedAnimals = peopleDAO.getSavedAnimal(userID);
+			List<People> savedBreeders = peopleDAO.getSavedBreeder(userID);
+					
+			request.setAttribute("savedAnimals", savedAnimals );
+			request.setAttribute("savedBreeders", savedBreeders);
+			
 	    	RequestDispatcher dispatcher = request.getRequestDispatcher("welcome.jsp");
 	        dispatcher.forward(request, response);
 	        System.out.println("logged in with " + session.getAttribute("userName"));
@@ -365,7 +371,12 @@ public class ControlServlet extends HttpServlet {
     	if(authenticate(request, response)) {
 	        int animalID = Integer.parseInt(request.getParameter("animalID"));
 	        int userID =  (Integer) (session.getAttribute("userID"));
-	        peopleDAO.saveAnimal(animalID, userID);
+	        try {
+		        peopleDAO.saveAnimal(animalID, userID);
+	        } catch (SQLException e) {
+	        	if(e.getMessage().contains("Duplicate entry")) 
+	        		System.out.println("Animal already added!");	        	
+	        }
 	        response.sendRedirect("welcome");
 	    }
     }
@@ -376,12 +387,35 @@ public class ControlServlet extends HttpServlet {
     private void saveBreeder(HttpServletRequest request, HttpServletResponse response)
             throws SQLException, IOException, ServletException {
     	if(authenticate(request, response)) {
-	        int ownerId = Integer.parseInt(request.getParameter("ownerID"));
+	        int ownerID = Integer.parseInt(request.getParameter("ownerID"));
 	        int userID =  (Integer) (session.getAttribute("userID"));
-	        //People people = new People(id);
-	        peopleDAO.saveBreeder(ownerId, userID);
-	        RequestDispatcher dispatcher = request.getRequestDispatcher("welcome");
-	    	dispatcher.forward(request, response); 
+	        try {
+		        peopleDAO.saveBreeder(ownerID, userID);
+	        } catch (SQLException e) {
+	        	if(e.getMessage().contains("Duplicate entry")) 
+	        		System.out.println("Breeder already added!");	        	
+	        }
+	        response.sendRedirect("welcome");
+    	}
+    }
+    
+    private void deleteFavoriteAnimal(HttpServletRequest request, HttpServletResponse response)
+    		throws SQLException, IOException, ServletException {
+    	if(authenticate(request, response)) {
+    		int animalID = Integer.parseInt(request.getParameter("animalID"));
+	        int userID =  (Integer) (session.getAttribute("userID"));
+	        peopleDAO.deleteFavoriteAnimal(animalID, userID);
+    		response.sendRedirect("welcome");
+    	}
+    }
+    
+    private void deleteFavoriteBreeder(HttpServletRequest request, HttpServletResponse response)
+            throws SQLException, IOException, ServletException {
+    	if(authenticate(request, response)) {
+	        int ownerID = Integer.parseInt(request.getParameter("breederID"));
+	        int userID =  (Integer) (session.getAttribute("userID"));
+	        peopleDAO.deleteFavoriteBreeder(ownerID, userID);
+	        response.sendRedirect("welcome");
     	}
     }
     
@@ -389,9 +423,8 @@ public class ControlServlet extends HttpServlet {
             throws SQLException, IOException, ServletException {
     	if(authenticate(request, response)) {
 	        int animalID = Integer.parseInt(request.getParameter("animalID"));
-	        //People people = new People(id);
 	        peopleDAO.deleteAnimal(animalID);
-	        //response.sendRedirect("list"); 
+	        response.sendRedirect("myAnimals"); 
     	}
     }
     

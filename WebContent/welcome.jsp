@@ -34,36 +34,38 @@
                 <th>Species</th>
                 <th>Owner</th>
                 <th>Adoption Price</th>
-                
+                <th>Delete Animal</th>
             </tr>           
-          <c:forEach items="${savedAnimals}" var="animals">
-                <tr>
-                    <td><c:out value="${animals.getName()}" /></td>
-                    <td><c:out value="${animals.getSpecies()}" /></td>
-                    <td><c:out value="${animals.getOwner()}" /></td>      
-                    <td><c:out value="${animals.getAdoptionPrice()}" /></td>                   
-                    
-                   
-                </tr>
-            </c:forEach>
-        </table>
+          <c:forEach items="${savedAnimals}" var="animal">
+              <tr>
+                  <td><c:out value="${animal.getName()}" /></td>
+                  <td><c:out value="${animal.getSpecies()}" /></td>
+                  <td><c:out value="${animal.getOwner()}" /></td>      
+                  <td><c:out value="${animal.getAdoptionPrice()}" /></td>       
+                  <td>
+                      <a href="deleteFavoriteAnimal?animalID=<c:out value='${animal.getId()}'/>">Delete</a>
+                  </td>                    
+              </tr>
+          </c:forEach>
+     </table>
          <table border="1" cellpadding="5">
             <caption><h2>Favorite Breeders</h2></caption>
             <tr>
-                <th>Pet Name</th>
-                <th>Species</th>
-                <th>Owner</th>
-                <th>Adoption Price</th>
-               
+                <th>Username</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Email</th>
+                <th>Delete Breeder</th>
             </tr>           
-          <c:forEach items="${savedBreeders}" var="animals">
+          <c:forEach items="${savedBreeders}" var="breeder">
                 <tr>
-                    <td><c:out value="${animals.getName()}" /></td>
-                    <td><c:out value="${animals.getSpecies()}" /></td>
-                    <td><c:out value="${animals.getOwner()}" /></td>      
-                    <td><c:out value="${animals.getAdoptionPrice()}" /></td>                   
-                    
-                   
+                    <td><c:out value="${breeder.getUserName()}" /></td>
+                    <td><c:out value="${breeder.getFirstName()}" /></td>
+                    <td><c:out value="${breeder.getLastName()}" /></td>      
+                    <td><c:out value="${breeder.getEmailAddress()}" /></td>      
+                    <td>
+                    	<a href="deleteFavoriteBreeder?breederID=<c:out value='${breeder.getId()}'/>">Delete</a>
+                    </td>             
                 </tr>
             </c:forEach>
         </table>
