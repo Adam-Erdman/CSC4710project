@@ -1,8 +1,10 @@
-# CSC4710project
-Database Management Final Project
+## CSC4710project
+# Database Management Final Project
 
 Web-based  front end  for  an  animal  adoption  agency with an accompanying database for managing pet adoption listings   
 
+
+## Notes
 
 Create three pages
 
